@@ -1,34 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import Journal from './components/Journal'
+import {BrowserRouter,Route,Routes} from "react-router-dom";
+import Studentroom from './components/Studentroom'
+import Root from './components/Root'
+import styled, { createGlobalStyle } from 'styled-components'
+import Calendar from './pages/Calendar';
+import Subjects from './pages/Subjects';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import Subject from './pages/Subject';
+
+
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    /* box-sizing: border-box; */
+    margin: 0;
+    padding: 0;
+  }
+`
+const BodyWrapper = styled.body`
+  /* background-color: #262626;
+	min-height: 100vh;
+	font-family: sans-serif; */
+`;
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BodyWrapper>
+    <GlobalStyle />
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Root/>}>
+       <Route index  element={<Journal/>}/>
+       <Route path="/student/:id" element={<Studentroom/>}/>
+       <Route path='/calendar' element={<Calendar/>}/>
+       <Route path='/subjects' element={<Subjects/>}/>
+       <Route path='/subjects/:sub' element={<Subject/>}/>
+       <Route path='/register' element={<Register/>}/>
+       <Route path='/login' element={<Login/>}/>
+       <Route path='/profile/:id' element={<Profile/>}/>
+       <Route path='/studentslist'  element={<Journal/>}/>
+       </Route>
+    </Routes>
+    </BrowserRouter>    
+    </BodyWrapper>
   )
 }
 
