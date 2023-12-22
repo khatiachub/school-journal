@@ -1,6 +1,4 @@
 import  { useEffect, useState } from 'react'
-import { subjects } from './data'
-import { Link } from 'react-router-dom'
 import { publicRequest } from './requestmethods'
 import styled from 'styled-components'
 import Table from './Table'
@@ -10,18 +8,24 @@ const Students=styled.div`
   max-width:600px;
   width:100%;
   margin-top:40px;
+  margin-left:100px;
+  @media screen and (max-width:768px) {
+    margin-left:0;
+  }
   `
 const Container = styled.div`
   width: 100%;
-  min-height:100vh;
-  background-size: cover;
   display: flex;
   flex-direction:column;
   align-items: center;
-  justify-content: center;
-  background-position:left;
-  padding:50px 0px 50px 0px;
-`;
+  justify-content:end;
+  padding:30px;
+  box-sizing:border-box;
+  margin:0 auto;
+  @media screen and (max-width:768px) {
+    padding:10px;
+  }
+`
 const Wraper=styled.div`
   max-width:600px;
   width:100%;
@@ -29,13 +33,29 @@ const Wraper=styled.div`
   justify-content:space-between;
   align-items: start;
   margin-top:150px;
+  margin-left:100px;
+  @media screen and (max-width:768px) {
+    margin-left:0;
+  }
+  @media screen and (max-width:485px) {
+    flex-direction:column;
+  }
 `
 const SelectWraper=styled.div`
-  
+  display:flex;
+  flex-direction:column;
+  @media screen and (max-width:485px) {
+    max-width:600px;
+    width:100%;
+  }
 `
 const Subjectwraper=styled.div`
   display:flex;
   flex-direction:column;
+  @media screen and (max-width:485px) {
+    max-width:600px;
+    width:100%;
+  }
 `
 
 const Input = styled.input`
@@ -49,6 +69,10 @@ const Input = styled.input`
     color: #262626 ;
     font-family: 'Cormorant Garamond', serif;
     padding-left:5px;
+  }
+  @media screen and (max-width:485px) {
+    max-width:600px;
+    width:100%;
   }
 `;
 
@@ -68,13 +92,37 @@ const Button=styled.button`
     background-color:#2c67dd;
     transition:0.5s;
    }
+   @media screen and (max-width:485px) {
+    max-width:600px;
+    width:100%;
+  }
   
 `
 const Label=styled.label`
   font-size:15px;
+  margin-top:10px;
 `
+
+
+interface Students{
+  name:string;
+  privatenumber:number;
+  _id:string;
+  subjects:Subjects[]
+}
+interface Subjects{
+  subject:string;
+  grades:Grades[];
+  _id:string;
+}
+interface Grades{
+  date: string;
+  attendance: boolean;
+  grade: number;
+  _id:string;
+}
 export default function Journal() {
-const[students,setStudents]=useState([])
+const[students,setStudents]=useState<Students[]>([])
     useEffect(()=>{
         async function fetchData(){
             try{
@@ -95,7 +143,7 @@ const[students,setStudents]=useState([])
     name:'',
     privatenumber:''
   })
-  const handleFilter=(e)=>(
+  const handleFilter=(e:React.ChangeEvent<HTMLSelectElement | HTMLInputElement>)=>(
     setState({...state,[e.target.name]:e.target.value})
   )
 
@@ -112,25 +160,22 @@ const[students,setStudents]=useState([])
       setState({...state,name:'',privatenumber:''});
 
   }
-  console.log(students);
-  console.log(state.privatenumber);
   
+  console.log(students);
   
 
   return (
     <Container>
     <Wraper>
-    <SelectWraper >
       <Subjectwraper >
       <Label>მოსწავლის პირადი ნომერი</Label>
       <Input value={state.privatenumber} name='privatenumber' onChange={(e)=>handleFilter(e)} type='number' placeholder='private number'/>
       </Subjectwraper>
-    </SelectWraper>
-    <div style={{display:'flex',flexDirection:'column'}}>
+    <SelectWraper >
       <Label>მოსწავლის სახელი</Label>
       <Input value={state.name} name='name' onChange={(e)=>handleFilter(e)} type="text" placeholder='Student'/>
       <Button onClick={addStudent}>Add student</Button>
-    </div>
+    </SelectWraper>
     </Wraper>
     <Students>
         <Table 

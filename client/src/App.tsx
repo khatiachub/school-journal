@@ -4,12 +4,13 @@ import {BrowserRouter,Route,Routes} from "react-router-dom";
 import Studentroom from './components/Studentroom'
 import Root from './components/Root'
 import styled, { createGlobalStyle } from 'styled-components'
-import Calendar from './pages/Calendar';
+import Calendars from './pages/Calendar';
 import Subjects from './pages/Subjects';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Subject from './pages/Subject';
+import Home from './pages/Home';
 
 
 
@@ -35,9 +36,9 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<Root/>}>
-       <Route index  element={<Journal/>}/>
+       <Route index  element={<Home/>}/>
        <Route path="/student/:id" element={<Studentroom/>}/>
-       <Route path='/calendar' element={<Calendar/>}/>
+       <Route path='/calendar' element={<Calendars/>}/>
        <Route path='/subjects' element={<Subjects/>}/>
        <Route path='/subjects/:sub' element={<Subject/>}/>
        <Route path='/register' element={<Register/>}/>

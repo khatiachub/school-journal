@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const Student=require("../models/Student")
 const Grade=require('../models/Grade');
-const NewGrade = require("../models/NewGrade");
-
+const Calendar=require('../models/Calendar')
+const { ObjectId } = require('mongoose').Types; // Import ObjectId
 
 // student
 
@@ -142,5 +142,47 @@ router.put("/student/:id/grade", async (req, res) => {
   }
 });
 
+//calendar
 
-module.exports = router ;
+
+router.post('/calendar', async (req, res) => {
+  const { title,start,end } = req.body;
+  console.log(req.body);
+
+  try {
+    const newEvent = new Calendar({title,start,end});
+
+    const savedEvent = await newEvent.save();
+    res.status(201).json(savedEvent);
+  } catch (error) {
+    console.error('Error creating event:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.get('/calendar', async (req, res) => {
+  try {
+    const allEvents = await Calendar.find();
+    res.status(200).json(allEvents);
+  } catch (error) {
+    console.error('Error retrieving events:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.delete('/calendar/:id', async (req, res) => {
+  try {
+    await Calendar.findByIdAndDelete(req.params.id);
+    res.status(200).json("Product has been deleted...");
+
+  } catch (error) {
+    console.error('Error deleting documents:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
+module.exports=router

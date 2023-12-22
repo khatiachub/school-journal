@@ -7,7 +7,7 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useUser } from './UserContext';
@@ -15,6 +15,11 @@ import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
+
+
+interface Props {
+  state: boolean;
+}
 
 const HeaderWraper=styled.div`
    width:83%;
@@ -25,8 +30,6 @@ const HeaderWraper=styled.div`
    align-items:center;
    justify-content:space-between;
    @media screen and (max-width:768px){
-    /* margin-top:20px; */
-    /* left: ${(props) => (props.state ? '400px' : '0px')}; */
     position:absolute;
     transition:0.5s;
     width:100%;
@@ -35,6 +38,7 @@ const HeaderWraper=styled.div`
     z-index: 1000000;
   }
 `
+
 const FlexBox=styled.div`
   display:flex;
   align-items:center;
@@ -134,7 +138,7 @@ const User=styled.p`
     display:none;
   }
 `
-const Navbar=styled.div`
+const Navbar=styled.div<Props>`
   width:75px;
   height:500px;
   border-radius:10px;
@@ -219,7 +223,6 @@ const HeaderBox=styled.div`
   background-color:#fff;
   @media screen and (max-width:768px){
     justify-content:center;
-    /* transform: ${(props) => (props.state ? 'translateX(-900px)' : 'translateX(0px)')}; */
     padding:0;
   }
 `
@@ -250,7 +253,7 @@ const ProfileLink=styled(Link)`
 
 
 export default function Header() {
-  const[state,setState]=useState(false)
+  const[state,setState]=useState<boolean>(false)
   const handleClick=()=>{
     setState(!state)    
   }
@@ -290,11 +293,10 @@ const logOut=()=>{
           <LoginOutlinedIcon style={{color:'#fff'}}/>
           <Text>შესვლა</Text>
         </Wraper>
-        {user?.status==='მოსწავლე'?
         <Wraper to={'/calendar'}>
           <CalendarTodayOutlinedIcon style={{color:'#fff'}}/>
           <Text>კალენდარი</Text>
-        </Wraper>:''}
+        </Wraper>
         {user?.status==='მოსწავლე'?
         <Wraper to={'/subjects'}>
           <SubjectOutlinedIcon style={{color:'#fff'}}/>
@@ -318,8 +320,10 @@ const logOut=()=>{
           <Burger onClick={handleClick}>
             <MenuOutlinedIcon/>
           </Burger>
+          <Link style={{display:'flex',textDecoration:'none',width:150,justifyContent:'space-between'}} to={'/'}>
           <Image src={'https://onlineschool.emis.ge/assets/svg_icons/brand.svg'}/>
           <School>ონლაინ სკოლა</School>
+          </Link>
         </FlexBox>
         <UserBox>
           <SchoolBox>
@@ -329,7 +333,7 @@ const logOut=()=>{
             <SchoolNumber>სსიპ - ქალაქ თბილისის №55 საჯარო სკოლა</SchoolNumber>
           </SchoolBox>
           <UserWraper>
-            <ProfileImage src='https://onlineschool.emis.ge/assets/images/pattern.png'/>
+            <ProfileImage  src='https://onlineschool.emis.ge/assets/images/pattern.png'/>
             <div style={{display:'flex',flexDirection:'column'}}>
             {user?.status==='მასწავლებელი'?
             <User>მასწავლებელი</User>:

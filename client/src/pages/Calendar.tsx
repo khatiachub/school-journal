@@ -1,39 +1,24 @@
-import React from 'react'
+import { useEffect, useState} from 'react'
 import styled from 'styled-components'
-import { days } from '../components/data'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
+import { useNavigate } from 'react-router-dom';
+import { publicRequest } from '../components/requestmethods';
+import { MyCalendar } from '../components/Moment';
+import moment from 'moment';
 
 
-const Table=styled.table`
-    width:80%;
-    margin:0 auto;
-    margin-top:40px;
-    position: relative;
+
+const Container=styled.div`
+    
 `
 
-const Th=styled.th`
-  text-align: left;
-  padding: 20px;
-  border:none;
-  color:#fff;
-  background-color:#1CA3DE;
-  height:40px;
-`
-const Td=styled.td`
-    text-align: left;
-    border: 1px solid #f1eeee;
-    padding:20px;
-    height:40px;
-    color:#333333;
-    `
-const Tr=styled.tr`
-    &:nth-child(odd) {
-    background-color: #f2f2f2;
-  }
-`
+
+
+
 const SubjectModule=styled.div`
     max-width:450px;
     width:100%;
@@ -46,6 +31,7 @@ const SubjectModule=styled.div`
     border-radius:5px;
     box-shadow: #a5a2a2 0px 4px 8px -2px, #f1eeee 0px 0px 0px 1px;
     border: 1px solid #f1eeee;
+    z-index:100 ;
 `
 const RemoveButton=styled.div`
     position:absolute;
@@ -92,74 +78,128 @@ const GroupWraper=styled.div`
 const Group=styled.p`
     margin-left:10px;
     color:#262626;
-
+`
+const BackArrow=styled.div`
+    width:95%;
+    margin:0 auto;
+    height:50px;
+    background-color:#f3f1f1;
+    margin-top:30px;
+    color:#fff;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    padding-left:10px;
+    box-sizing:border-box;
 `
 
 
 
 
-export default function Calendar() {
+
+export default function Calendars() {
+    const nav=useNavigate()
+    const handleClick=()=>{
+        nav('/')
+    }
+    const[state,setState]=useState({
+        date:'',
+        subject:'',
+        time:''
+    })
+
+    const handleChange=(e:React.ChangeEvent)=>{
+        const target = e.target as HTMLInputElement;
+        const name=target.name
+        const value=target.value
+        setState({...state,[name]:value})
+    }
+       
+        
+    const [myEventsList, setMyEventsList] = useState([]);
+    const eventStart = moment(`${state.date} ${state.time}`, 'YYYY-MM-DD HH:mm').toDate();
+    const eventEnd = moment(eventStart).add(1, 'hour').toDate(); // Assuming events last for 1 hour
+    const subjects= {
+        title:state.subject,
+        start:new Date(eventStart),
+        end:new Date (eventEnd)
+    }
+   
+    const handleAdd=()=>{
+        async function fetchData(){
+            try{
+            const response=await publicRequest.post('/calendar',subjects)
+            console.log(response.data);
+            window.location.reload()
+            } catch(error){
+              console.error('Error fetching data:', error);
+            };
+          }
+            fetchData();
+    }
+
+
+    useEffect(()=>{
+        async function fetchData(){
+            try{
+            const response=await publicRequest.get(`/calendar`)
+            setMyEventsList(response.data)            
+            } catch(error){
+              console.error('Error fetching data:', error);
+            };
+          }
+            fetchData();
+      },[])
+
+
+      const events = myEventsList.map(({start, end,title}) =>
+      ({
+        title,
+        start: new Date(Date.parse(start)),
+        end: new Date(Date.parse(end)),
+       })
+      );
+      
+
+      const[selected,setSelected]=useState(false)
+      const handleEventClick=()=>{
+        setSelected(true)
+      }
+      const handleRemove=()=>{
+        setSelected(false)
+      }
+
+      const eventStyleGetter=()=>{
+        const backgroundColor='red'
+        return {
+            style: {
+              backgroundColor,
+            },
+          };
+      }
   return (
-    <div>
-      <Table>
-        <thead>
-            <tr >
-                <Th>დრო</Th>
-                {days.map((day)=>(<Th>{day.day}</Th>))}
-            </tr>
-        </thead>
-        <tbody>
-            <Tr>
-                <Td>09:00</Td>
-                <Td>ქართული</Td>
-                <Td>ქიმია</Td>
-                <Td>ქიმია</Td>
-                <Td>ბიოლოგია</Td>
-                <Td>მათემატიკა</Td>
-            </Tr>
-            <Tr>
-                <Td>10:00</Td>
-                <Td>ბიოლოგია</Td>
-                <Td>ბიოლოგია</Td>
-                <Td>ქართული</Td>
-                <Td>მათემატიკა</Td>
-                <Td>რუსული</Td>
-            </Tr>
-            <Tr>
-                <Td>11:00</Td>
-                <Td>ისტორია</Td>
-                <Td>ფიზიკა</Td>
-                <Td>გეოგრაფია</Td>
-                <Td>ფიზიკა</Td>
-                <Td>ისტორია</Td>
-            </Tr>
-            <Tr>
-                <Td>12:00</Td>
-                <Td>მათემატიკა</Td>
-                <Td>ინგლისური</Td>
-                <Td>მათემატიკა</Td>
-                <Td>ქართული</Td>
-                <Td>ფიზიკა</Td>
-            </Tr>
-            <Tr>
-                <Td>13:00</Td>
-                <Td>რუსული</Td>
-                <Td>გეოგრაფია</Td>
-                <Td>ბიოლოგია</Td>
-                <Td>ქიმია</Td>
-                <Td>ინგლისური</Td>
-            </Tr>
-            <Tr>
-                <Td>14:00</Td>
-                <Td>ფიზიკა</Td>
-                <Td>მათემატიკა</Td>
-                <Td>ფიზიკა</Td>
-                <Td>გეოგრაფია</Td>
-                <Td>სპორტი</Td>
-            </Tr>
-        </tbody>
-        <SubjectModule>
-            <RemoveButton>
+    <Container>
+        <BackArrow onClick={handleClick}>
+            <ArrowBackIosOutlinedIcon/>
+        </BackArrow>
+        <input  name='time' type='time' onChange={(e)=>handleChange(e)}/>
+        <input  name='date' type='date' onChange={(e)=>handleChange(e)}/>
+        <select name='subject' onChange={(e)=>handleChange(e)}>
+            <option>ქართული</option>
+            <option>მათემატიკა</option>
+            <option>ფიზიკა</option>
+            <option>ქიმია</option>
+            <option>ბიოლოგია</option>
+            <option>გეოგრაფია</option>
+            <option>ისტორია</option>
+            <option>ინგლისური</option>
+        </select>
+        <button onClick={handleAdd}>დამატება</button>
+      <MyCalendar myEventsList={events} handleEventClick={handleEventClick} eventStyleGetter={eventStyleGetter}/>
+
+
+      {selected?<SubjectModule>
+            <RemoveButton onClick={handleRemove}>
             <ClearOutlinedIcon/>
             </RemoveButton>
             <Icons>
@@ -179,8 +219,7 @@ export default function Calendar() {
             <Group>მონაწილეები:</Group>
             </GroupWraper>
             </Icons>
-        </SubjectModule>
-      </Table>
-    </div>
+        </SubjectModule>:''}
+      </Container>
   )
 }

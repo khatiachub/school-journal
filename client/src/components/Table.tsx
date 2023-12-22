@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -20,9 +20,10 @@ const TableBox=styled.table`
     background-color:#fff;
     box-shadow: #cac5c5 2px 4px 8px ;
     height:auto;
-
 `
+
 const Tr=styled.tr`
+ 
   
 `
 const Th=styled.th`
@@ -36,12 +37,6 @@ const Th=styled.th`
     padding: 10px;
     font-size:13px;
   }
-  @media screen and (max-width:485px) {
-    padding-left: 3px;
-    font-size:10px;
-    /* box-sizing:border-box; */
-  }
-  
 `
 const Td=styled.td`
     text-align: center;
@@ -59,32 +54,28 @@ const Td=styled.td`
     padding: 10px;
     font-size:13px;
   }
-  @media screen and (max-width:485px) {
-    padding-left: 3px;
-    font-size:10px;
-    height:50px;
-    /* box-sizing:border-box; */
-  }
     &:nth-child(even) {
     background-color: #f2f2f2;
     border: 1px solid #fff;
   }
 `
 const DeleteIcon=styled.div`
-  position:absolute;
-  right:55px;
+  /* position:absolute;
+  right:55px; */
   color:#1CA3DE;
   cursor: pointer;
-  margin-right:30px;
+  margin-right:60px;
   @media screen and (max-width:600px) {
     font-size:13px;
-    margin-right:0px;
+    /* right:40px; */
   }
   @media screen and (max-width:485px) {
     font-size:10px;
     box-sizing:border-box;
-    margin-right:0px;
-    right:45px;
+    /* right:45px; */
+  }
+  @media screen and (max-width:400px) {
+    /* margin-right:0; */
   }
 `
 const EditIcon=styled.div`
@@ -92,26 +83,24 @@ const EditIcon=styled.div`
   right:20px;
   color:#1CA3DE;
   cursor: pointer;
-  margin-right:25px;
+  /* margin-right:25px; */
   @media screen and (max-width:600px) {
     font-size:10px;
-    margin-right:0px;
+    /* margin-right:10px; */
   }
   @media screen and (max-width:485px) {
     padding: 5px;
     font-size:10px;
     box-sizing:border-box;
     right:12px;
+    /* margin-right:0px; */
   }
 `
 const Tdborder=styled.td`
   border:none;
 `
 
-const EditBox=styled.div`
-  position:absolute;
-  left:50%;
-`
+
 const Input=styled.input`
   max-width:300px;
   width:100%;
@@ -128,9 +117,39 @@ const Button=styled.button`
    border:none;
 `
 
-export default function Table(props) {
+interface Grade {
+  date: string;
+  attendance: boolean;
+  grade: number;
+  _id:string;
+}
+interface Subject {
+  _id: string;
+  subject: string;
+  grades: Grade[];
+}
+
+interface Student {
+  _id: string;
+  privatenumber: string;
+  name: string;
+  subjects:Subject[];
+}
+
+interface Props {
+  students: Student[];
+  setStudents: React.Dispatch<React.SetStateAction<Student[]>>;
+  subject: string;
+}
+
+
+
+
+
+
+export default function Table (props:Props){
     const loc=useLocation()
-    const deleteStudent=(id)=>{
+    const deleteStudent=(id:string)=>{
       async function fetchData(){
         try{
         const response=await publicRequest.delete(`/student/${id}/grade`)
@@ -147,11 +166,12 @@ export default function Table(props) {
     const[edit,setEdit]=useState(false)
     const[id,setId]=useState('')
 
-    const handleChange=(e)=>{
-      const value=e.target.value
+    const handleChange=(e:React.ChangeEvent)=>{
+      const target = e.target as HTMLInputElement;
+      const value=target.value
       setName({name:value})
     }
-    const editName=(id)=>{
+    const editName=(id:string)=>{
       if(name.name===''){
         return
       }
@@ -166,12 +186,12 @@ export default function Table(props) {
         fetchData();
         window.location.reload()
     }
-    const handleEdit=(id)=>{
+    const handleEdit=(id:string)=>{
       setId(id)
       setEdit(!edit)
     }
     const params=useParams()
-    const deleteGrade=(weekId)=>{
+    const deleteGrade=(weekId:string)=>{
       async function fetchData(){
         try{
         const response=await publicRequest.delete(`/student/${params.id}/grade/${weekId}`)
@@ -185,17 +205,22 @@ export default function Table(props) {
         // const students = props.filteredweek.filter((item) => item._id !== weekId);
         // props.setStudents(students)
     }
-    const handleEditGrade=()=>{
+    const handleEditGrade=(id:string)=>{
 
     }
     
     
     
-    const filteredSubject=props.students.subjects&&props.students.subjects.filter((subject)=>(subject.subject===props.subject))
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return new Intl.DateTimeFormat('en-US').format(date);
-    };    
+    const filteredSubject=props.students.subjects&&props.students.subjects.filter((subject:Subject)=>(subject.subject===props.subject))
+    const formatDate = (dateString:string) => {
+      if(dateString){
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('en-US').format(date);    
+      }else{
+        return
+      }
+    }; 
+    
     
   return (
        <TableBox>
@@ -213,7 +238,7 @@ export default function Table(props) {
             <Th>საგანი</Th>
             <Th>დასწრება</Th>
             <Th>შეფასება</Th>
-            <Th>რედაქტირება</Th>
+            <Th >რედაქტირება</Th>
             </>
             }
         </Tr>
@@ -232,8 +257,8 @@ export default function Table(props) {
            </>
            :<>
            {/* tarigiiiiiiiiiiiii */}
-           {filteredSubject&&filteredSubject.map((subject)=>(
-            subject.grades.map((date)=>(<Td>{formatDate(date.date)}</Td>))
+           {filteredSubject&&filteredSubject.map((subject:Subject)=>(
+            subject.grades.map((date)=>(<Td key={date._id}>{formatDate(date?.date)}</Td>))
            ))}
            </>
            }
@@ -247,11 +272,11 @@ export default function Table(props) {
            <Td  key={student._id}>
                 {edit&&student._id===id?
                  <div style={{display:'flex', alignItems:'center'}}>
-                  <LinkStudent key={student.studentId} to={''} className='list'><Input placeholder='change name' onChange={(e)=>handleChange(e)} name='name' /></LinkStudent>
+                  <LinkStudent key={student.privatenumber} to={''} className='list'><Input placeholder='change name' onChange={(e)=>handleChange(e)} name='name' /></LinkStudent>
                   <Button onClick={()=>editName(student._id)}>Change</Button>
                  </div>
                   :
-                  <LinkStudent key={student.studentId} to={`/student/${student._id}`} className='list'>{student.name}</LinkStudent>
+                  <LinkStudent key={student.privatenumber} to={`/student/${student._id}`} className='list'>{student.name}</LinkStudent>
                 }
             </Td>
             
@@ -271,34 +296,29 @@ export default function Table(props) {
             )):''}
 
 
-
-
-
-
-
            {/* <saganiiiiiiiiiiiiii */}
           <Tdborder >
-          {filteredSubject&&filteredSubject.map((subject)=>(
+          {filteredSubject&&filteredSubject.map((subject:Subject)=>(
             <Td>{subject.subject}</Td>
             ))}
 
           </Tdborder>
             <Tdborder>
                {/* daswrebaaaaaaaaaaaaaaa */}
-             {filteredSubject&&filteredSubject.map((subject)=>(
+             {filteredSubject&&filteredSubject.map((subject:Subject)=>(
                  subject.grades.map((grade)=>(<Td>{grade.attendance?'კი':'არა'}</Td>))
               ))}
             </Tdborder>
            
             {/* qulebiiiiiiiiiii */}
            <Tdborder >
-           {filteredSubject&&filteredSubject.map((subject)=>(
+           {filteredSubject&&filteredSubject.map((subject:Subject)=>(
                 subject.grades.map((grade)=>(<Td key={subject._id}>{grade.grade}</Td>))
             ))
            }
             </Tdborder>
             <Tdborder >
-           {filteredSubject&&filteredSubject.map((subject)=>(
+           {filteredSubject&&filteredSubject.map((subject:Subject)=>(
               <Td   key={subject._id}>
               <DeleteIcon   onClick={()=>deleteGrade(subject._id)}>
                <DeleteOutlineOutlinedIcon/>

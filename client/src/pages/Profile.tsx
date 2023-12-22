@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import styled from 'styled-components'
 import { useUser } from '../components/UserContext'
 import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
@@ -92,10 +92,12 @@ const Number=styled.p`
 
 export default function Profile() {
   const{user}=useUser()
-  const ref=useRef(null)
+  const ref = useRef<HTMLInputElement>(null);
   const onImageClick=()=>{
-    ref.current.click();
-  }
+    if (ref.current) {
+      ref.current.click();
+    }  }
+  
     return (
     <Container>
       <ProfileWraper>

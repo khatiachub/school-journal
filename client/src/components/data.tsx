@@ -2,69 +2,53 @@
 
 export const subjects=[
     {
-        subject:'English',
+        subject:'ინგლისური',
         subjectId:1
     },
     {
-        subject:'Georgian',
+        subject:'ქართული',
         subjectId:2
     },
      {
-        subject:'Math',
+        subject:'მათემატიკა',
         subjectId:3
     },
     {
-        subject:'Chemistry',
+        subject:'ქიმია',
         subjectId:4
     },
     {
-        subject:'Physics',
+        subject:'ფიზიკა',
         subjectId:5
     },
     {
-        subject:'Biology',
+        subject:'ბიოლოგია',
         subjectId:6
     },
     {
-        subject:'Sport',
+        subject:'გეოგრაფია',
         subjectId:7
+    },
+    {
+        subject:'ისტორია',
+        subjectId:8
     }
 ]
 
-export const weeks=[
-    {
-        week:'First',
-        weekId:1
-    },
-    {
-        week:'Second',
-        weekId:2
-    },
-    {
-        week:'Thirst',
-        weekId:3
-    }
-]
 export const days=[
     {
-        day:'Monday',
-        dayId:1
+        day:'ორშაბათი'
     },
     {
-        day:'Tuesday',
-        dayId:2
+        day:'სამშაბათი'
     },
     {
-        day:'Wednesday',
-        dayId:3
+        day:'ოთხშაბათი'
     },
     {
-        day:'Thursday',
-        dayId:4
+        day:'ხუთშაბათი'
     },
     {
-        day:'Friday',
-        dayId:5
-    },
+        day:'პარასკევი'
+    }
 ]
-

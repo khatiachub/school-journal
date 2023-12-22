@@ -1,9 +1,9 @@
-import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { publicRequest } from '../components/requestmethods';
 import { useUser } from '../components/UserContext';
+import { SyntheticEvent } from 'react'; // Import the SyntheticEvent type
 
 
 const Image = styled.div`
@@ -62,14 +62,17 @@ const TitleLink=styled(Link)`
 `
 export default function Login() {
   const { register, handleSubmit,watch,getValues, reset, formState: { errors } } = useForm();
-  const{login,logout,user}=useUser()
-  const email=watch("email")
-  const password=watch("password")
+  const{login,user}=useUser()
+  const email=watch("email") as string
+  const password=watch("password") as string
   
   const Email=register('email',{required:true})
   const Password=register('password',{required:true})
- 
-  const loginUser = async (users) => {
+  interface LoginFormValues {
+    email: string;
+    password: string;
+  }
+  const loginUser = async (users:LoginFormValues) => {
     try {
       const res = await publicRequest.post("/signin",users);
       console.log(res.data);
@@ -81,7 +84,7 @@ export default function Login() {
     }
   };
   const nav=useNavigate()
-  const handleClick=(e)=>{
+  const handleClick=(e:SyntheticEvent)=>{
     e.preventDefault();
     loginUser({email,password});
     nav("/")
