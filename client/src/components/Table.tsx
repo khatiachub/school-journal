@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import { publicRequest } from './requestmethods';
+import { userRequest } from './requestmethods';
 
 
 const LinkStudent=styled(Link)`
     color:#1CA3DE;
     font-family: 'Cormorant Garamond', serif;
     font-family: 'Raleway', sans-serif;
+    text-align:start;
     `
 
 
@@ -33,7 +34,7 @@ const Th=styled.th`
   color:#fff;
   background-color:#1CA3DE;
   height:40px;
-  @media screen and (max-width:600px) {
+  @media screen and (max-width:900px) {
     padding: 10px;
     font-size:13px;
   }
@@ -50,7 +51,7 @@ const Td=styled.td`
     position: relative;
     height:40px;
     color:#333333;
-    @media screen and (max-width:600px) {
+    @media screen and (max-width:900px) {
     padding: 10px;
     font-size:13px;
   }
@@ -110,11 +111,12 @@ const Input=styled.input`
 `
 const Button=styled.button`
    position:absolute;
-   right:90px;
-   width:80px;
+   right:5px;
+   width:60px;
    height:30px;
    top:25px;
    border:none;
+   font-size:14px;
 `
 
 interface Grade {
@@ -152,7 +154,7 @@ export default function Table (props:Props){
     const deleteStudent=(id:string)=>{
       async function fetchData(){
         try{
-        const response=await publicRequest.delete(`/student/${id}/grade`)
+        const response=await userRequest.delete(`/student/${id}`)
         console.log(response.data);
         } catch(error){
           console.error('Error fetching data:', error);
@@ -170,6 +172,7 @@ export default function Table (props:Props){
       const target = e.target as HTMLInputElement;
       const value=target.value
       setName({name:value})
+      props.setState({...props.state,[target.name]:value})
     }
     const editName=(id:string)=>{
       if(name.name===''){
@@ -177,7 +180,7 @@ export default function Table (props:Props){
       }
       async function fetchData(){
         try{
-        const response=await publicRequest.put(`/student/${id}/grade`,name)
+        const response=await userRequest.put(`/student/${id}/grade`,name)
         console.log(response.data);
         } catch(error){
           console.error('Error fetching data:', error);
@@ -191,11 +194,12 @@ export default function Table (props:Props){
       setEdit(!edit)
     }
     const params=useParams()
-    const deleteGrade=(weekId:string)=>{
+    const deleteGrade=(subjectId:string)=>{
       async function fetchData(){
         try{
-        const response=await publicRequest.delete(`/student/${params.id}/grade/${weekId}`)
+        const response=await userRequest.delete(`/student/${params.id}/grade/${subjectId}`)
         console.log(response.data);
+        window.location.reload()
         } catch(error){
           console.error('Error fetching data:', error);
         };
@@ -206,7 +210,8 @@ export default function Table (props:Props){
         // props.setStudents(students)
     }
     const handleEditGrade=(id:string)=>{
-
+      setId(id)
+      setEdit(!edit)
     }
     
     
@@ -258,7 +263,16 @@ export default function Table (props:Props){
            :<>
            {/* tarigiiiiiiiiiiiii */}
            {filteredSubject&&filteredSubject.map((subject:Subject)=>(
-            subject.grades.map((date)=>(<Td key={date._id}>{formatDate(date?.date)}</Td>))
+            subject.grades.map((date)=>(
+            // <Td key={date._id}>{formatDate(date?.date)}</Td>
+            <Td key={subject._id}>
+            {edit&&subject._id===id?
+              <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
+            <div  className='list'><Input value={props.state.date} placeholder='შეცვალე თარიღი' onChange={(e)=>handleChange(e)} name='date' /></div>
+           </div>
+            : formatDate(date?.date)}
+          </Td>
+            ))
            ))}
            </>
            }
@@ -272,7 +286,7 @@ export default function Table (props:Props){
            <Td  key={student._id}>
                 {edit&&student._id===id?
                  <div style={{display:'flex', alignItems:'center'}}>
-                  <LinkStudent key={student.privatenumber} to={''} className='list'><Input placeholder='change name' onChange={(e)=>handleChange(e)} name='name' /></LinkStudent>
+                  <LinkStudent key={student.privatenumber} to={''} className='list'><Input value={student.name} placeholder='change name' onChange={(e)=>handleChange(e)} name='name' /></LinkStudent>
                   <Button onClick={()=>editName(student._id)}>Change</Button>
                  </div>
                   :
@@ -299,23 +313,47 @@ export default function Table (props:Props){
            {/* <saganiiiiiiiiiiiiii */}
           <Tdborder >
           {filteredSubject&&filteredSubject.map((subject:Subject)=>(
-            <Td>{subject.subject}</Td>
-            ))}
+            <Td key={subject._id}>
+                 {edit&&subject._id===id?
+                   <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
+                 <div  className='list'><Input value={subject.subject} placeholder='შეცვალე საგანი' onChange={(e)=>handleChange(e)} name='subject' /></div>
+                </div>
+                 :subject.subject}
+            </Td>                  ))}
 
           </Tdborder>
             <Tdborder>
                {/* daswrebaaaaaaaaaaaaaaa */}
              {filteredSubject&&filteredSubject.map((subject:Subject)=>(
-                 subject.grades.map((grade)=>(<Td>{grade.attendance?'კი':'არა'}</Td>))
+                 subject.grades.map((grade)=>(
+                 <Td key={subject._id}>
+                 {edit&&subject._id===id?
+                   <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
+                 <div  className='list'><Input value={grade.attendance?'კი':'არა'} placeholder='შეცვალე დასწრება' onChange={(e)=>handleChange(e)} name='attendance' /></div>
+                </div>
+                 : grade.attendance?'კი':'არა'}
+               </Td>
+                 ))
               ))}
             </Tdborder>
            
             {/* qulebiiiiiiiiiii */}
            <Tdborder >
            {filteredSubject&&filteredSubject.map((subject:Subject)=>(
-                subject.grades.map((grade)=>(<Td key={subject._id}>{grade.grade}</Td>))
+                subject.grades.map((grade)=>(
+                <Td key={subject._id}>
+                  {edit&&subject._id===id?
+                    <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
+                  <div  className='list'><Input value={grade.grade} placeholder='შეცვალე ქულა' onChange={(e)=>handleChange(e)} name='grade' /></div>
+                  <Button onClick={()=>props.editGrade(subject._id)}>Change</Button>
+                 </div>
+                  :grade.grade}
+                </Td>
+                ))
             ))
            }
+
+                
             </Tdborder>
             <Tdborder >
            {filteredSubject&&filteredSubject.map((subject:Subject)=>(

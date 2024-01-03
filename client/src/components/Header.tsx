@@ -15,20 +15,24 @@ import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
-
+// rgb(59 130 246 / .5)
 
 interface Props {
   state: boolean;
 }
 
 const HeaderWraper=styled.div`
-   width:83%;
+   width:90%;
    height:60px;
    border-radius:7px;
-   background-color:#f1eeee;  
+   background-color:#f7f6f6;  
    display:flex;
    align-items:center;
    justify-content:space-between;
+   margin-left:10px;
+   @media screen and (max-width:1200px){
+    width:85%;
+  }
    @media screen and (max-width:768px){
     position:absolute;
     transition:0.5s;
@@ -142,7 +146,7 @@ const Navbar=styled.div<Props>`
   width:75px;
   height:500px;
   border-radius:10px;
-  background-color:#09455f;
+  background-color:#174978;
   padding:15px;
   /* position:fixed;
   top:30px;
@@ -221,6 +225,9 @@ const HeaderBox=styled.div`
   z-index:100;
   padding-top:20px;
   background-color:#fff;
+  padding-left:10px;
+  padding-right:10px;
+  box-sizing:border-box;
   @media screen and (max-width:768px){
     justify-content:center;
     padding:0;
@@ -250,7 +257,12 @@ const ProfileLink=styled(Link)`
   text-decoration:none;
   display:flex;
 `
-
+const Span=styled.span`
+  font-weight:400;
+  @media screen and (max-width:1024px){
+    display:none;
+  }
+`
 
 export default function Header() {
   const[state,setState]=useState<boolean>(false)
@@ -263,7 +275,6 @@ const changeArrow=()=>{
 }
 const{user,logout}=useUser()
 const nav=useNavigate();
-console.log(user?._id);
 const logOut=()=>{
   logout()
   nav("/login")
@@ -289,10 +300,14 @@ const logOut=()=>{
           <Person2OutlinedIcon style={{color:'#fff'}}/>
           <Text>რეგისტრაცია</Text>
         </Wraper>
+        {!user?
+        <>
         <Wraper to={'/login'}>
           <LoginOutlinedIcon style={{color:'#fff'}}/>
           <Text>შესვლა</Text>
         </Wraper>
+        </>
+        :''}
         <Wraper to={'/calendar'}>
           <CalendarTodayOutlinedIcon style={{color:'#fff'}}/>
           <Text>კალენდარი</Text>
@@ -336,11 +351,11 @@ const logOut=()=>{
             <ProfileImage  src='https://onlineschool.emis.ge/assets/images/pattern.png'/>
             <div style={{display:'flex',flexDirection:'column'}}>
             {user?.status==='მასწავლებელი'?
-            <User>მასწავლებელი</User>:
+            <User style={{fontSize:12}}>მასწავლებელი</User>:
             <User>მოსწავლე</User>
             
             }
-            <User style={{fontSize:13}}>{user?.name}</User>
+            <Span >{user?.name}</Span>
             </div>
             <Accordeon onClick={changeArrow}>
               {arrow?<KeyboardArrowDownOutlinedIcon/>:<KeyboardArrowUpOutlinedIcon/>}
@@ -353,7 +368,7 @@ const logOut=()=>{
                   </ProfileLink>
                 </ProfileWraper>
                 <ProfileWraper>
-                  <ProfileLink to={'/'}>
+                  <ProfileLink to={'/parameters/changepassword'}>
                   <ManageAccountsOutlinedIcon style={{color:"#bbb3b3"}}/>
                   <Info>პარამეტრები</Info>
                   </ProfileLink>

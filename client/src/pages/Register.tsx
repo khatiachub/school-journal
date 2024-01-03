@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { publicRequest } from '../components/requestmethods';
-
-
-
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const Image = styled.div`
@@ -15,10 +13,11 @@ const Image = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
-  background-position:right;
-  right:0;
-  /* position: fixed; */
-`;
+  background-position:left;
+  @media screen and (max-width:1024px) {
+    display:none
+  }
+`
 const Input=styled.input`
   width:240px;
   height:50px;
@@ -29,10 +28,13 @@ const Input=styled.input`
 `
 const Button=styled.button`
   width:240px;
+  color:#fff;
+  font-size:20px;
   height:50px;
-  border:1px solid #3317ad;
+  border:1px solid #5e94fa;
   border-radius:36px;
   margin-top:20px;
+  background-color:#5e94fa;
 `
 const Radio=styled.input`
   margin-top:10px;
@@ -43,7 +45,7 @@ const Title=styled.h3`
   margin-top:10px;
 `
 const Form=styled.form`
-  width:100%;
+  /* width:100%; */
   display:flex;
   flex-direction:column;
   margin-top:20px;
@@ -53,13 +55,30 @@ const FormWraper=styled.div`
   justify-content:center;
   flex-direction:column;
   align-items:center;
-  width:40%;
+  width:45%;
   margin-left:70px;
+  min-height:100vh;
+  box-sizing:border-box;
+  padding:10px;
+  padding-bottom:50px;
+  @media screen and (max-width:1172px) {
+    width:250px;
+    margin-left:130px;
+  }
+  @media screen and (max-width:1024px) {
+    margin-left:0px;
+  }
 `
 const Container=styled.div`
    display:flex;
-   background-color:#101291;
+   justify-content:space-between;
+   background-color:#003A6B;
    min-height:100vh;
+   width:100%;
+   position: relative;
+   @media screen and (max-width:1024px) {
+    justify-content:center;
+  }
 `
 const Label=styled.label`
   color:#fff;
@@ -70,8 +89,49 @@ const RadioWraper=styled.div`
   align-items:baseline;
   margin-top:10px;
 `
+
+const InputWraper=styled.div`
+  display:flex;
+  justify-content:space-between;
+  @media screen and (max-width:1172px) {
+    flex-direction:column;
+  }
+  @media screen and (max-width:1024px) {
+    flex-direction:row;
+  }
+  @media screen and (max-width:510px) {
+    flex-direction:column;
+  }
+`
+const SuccessBox=styled.div`
+  max-width:500px;
+  width:100%;
+  height:340px;
+  background-color:#1CA3DE;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  border-radius:10px;
+  display:flex;
+  justify-content:Center;
+  align-items:center;
+  padding:10px;
+  box-sizing:border-box;
+`
+const Text=styled.p`
+  max-width:500px;
+  width:100%;
+  text-align:center;
+  color:#fff;
+  font-size:25px;
+  line-height:2;
+`
+
+
 export default function Register() {
   const { register, handleSubmit,watch,getValues, reset, formState: { errors } } = useForm();
+  const[success,setSuccess]=useState(false)
 
   const name=watch('name')
   const lastname=watch('lastname')
@@ -102,75 +162,73 @@ export default function Register() {
         try {
           const res = await publicRequest.post("/signup",formData);
           console.log(res.data);
+          setSuccess(true)
         } catch (err) {
           console.log(err);
         }
       };
       registerUser();       
   }
-  
+  const nav=useNavigate();
+  useEffect(()=>{
+    if(success){
+      const timeoutId = setTimeout(() => {
+        nav('/login'); 
+      }, 5000);
+      return () => clearTimeout(timeoutId);
+    }
+  },[success])
   
   return (
     <Container>
       <FormWraper>
       <Title>რეგისტრაცია</Title>
       <Form onSubmit={handleSubmit(handleClick)}>
-       <div style={{display:'flex',justifyContent:'space-between'}}>
-       <div style={{width:"240px",marginTop:20}}>
+        <InputWraper>
+       <div style={{width:"240px",marginTop:25,paddingRight:10}}>
         <Label>სახელი</Label>
         <Input {...Name} 
-        // onChange={(e)=>handleChange(e)} 
         name='name' type='text'/>
         </div>
-       <div style={{width:"240px",marginTop:20}}>
+       <div style={{width:"240px",marginTop:25}}>
        <Label>გვარი</Label>
         <Input {...Lastname} 
-        // onChange={(e)=>handleChange(e)} 
         name='lastname'  type='text'/>
        </div>
-       </div>
-        
-        <div style={{display:'flex',justifyContent:'space-between'}}>
-          <div style={{width:"240px",marginTop:20}}>
+       </InputWraper>
+       <InputWraper>     
+          <div style={{width:"240px",marginTop:25,paddingRight:10}}>
           <Label>მეილი</Label>
           <Input {...Email} 
-          // onChange={(e)=>handleChange(e)} 
           name='email' type='email'/>
           </div>
-          <div style={{width:"240px",marginTop:20}}>
+          <div style={{width:"240px",marginTop:25}}>
           <Label >პირადი ნომერი</Label>
           <Input {...Privatenumber} 
-          // onChange={(e)=>handleChange(e)} 
           name='privatenumber' type='number'/>
           </div>
-        </div>
-
-        <div style={{display:'flex',justifyContent:'space-between'}}>
-          <div style={{width:"240px",marginTop:20}}>
+          </InputWraper>   
+          <InputWraper>
+          <div style={{width:"240px",marginTop:25,paddingRight:10}}>
           <Label>პაროლი</Label>
           <Input {...Password} 
-          // onChange={(e)=>handleChange(e)} 
           name='password' type='password'/>
           </div>
-          <div style={{width:"240px",marginTop:20}}>
+          <div style={{width:"240px",marginTop:25}}>
           <Label>გაიმეორეთ პაროლი</Label>
           <Input {...Confirmpassword} 
-          // onChange={(e)=>handleChange(e)}
           name='confirmpassword' type='password'/>
           </div>
-        </div>
-       
+          </InputWraper>          
        <div style={{display:'flex',justifyContent:'start'}}>
          <RadioWraper>
             <Label>მასწავლებელი</Label>
             <Radio {...Status} 
-            // onChange={(e)=>handleChange(e)} 
             name='status' value='მასწავლებელი' type='radio'/>
         </RadioWraper>
         <RadioWraper style={{marginLeft:10}}>
             <Label>მოსწავლე</Label>
             <Radio {...Status} 
-            // onChange={(e)=>handleChange(e)} 
             name='status' value='მოსწავლე' type='radio'/>
         </RadioWraper>
        </div>
@@ -179,6 +237,11 @@ export default function Register() {
       </Form>
       </FormWraper>
       <Image/>
+      {success?
+      <SuccessBox>
+        <Text>თქვენ წარმატებით გაიარეთ რეგისტრაცია, ვერიფიკაციის ლინკი გამოგზავნილია თქვენს იმეილზე</Text>
+      </SuccessBox>
+      :''}
     </Container>
   )
 }

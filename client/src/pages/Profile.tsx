@@ -1,40 +1,75 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useUser } from '../components/UserContext'
 import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
 import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
+import { userRequest } from '../components/requestmethods';
+
+
 
 const Container=styled.div`
-  width:85%;
-  margin:0 auto;
-  top:20vh;
+  width:89.5%;
+  margin-top:17vh;
   height:150px;
-  position:relative;
-  left:11.5vh;
-  background-color:#55555cc9;
-  /* border-radius:36px; */
+  background-color:#C1D1DB;
   border-bottom-right-radius:70px;
   border-bottom-left-radius:70px;
   border-top-right-radius:20px;
   border-top-left-radius:20px;
   z-index:0 ;
+  padding-top:10vh;
+  box-sizing:border-box; 
+  @media screen and (max-width:1200px){
+    width:85%;
+  }
+  @media screen and (max-width:900px){
+    width:84%;
+  }
+  @media screen and (max-width:768px){
+    width:98%;
+  }
+  @media screen and (max-width:485px){
+    padding:0;
+    margin-top:10vh;
+  }
+`
+
+const ContainerWraper=styled.div`
+  width:100%;
+  display:flex;
+  justify-content:end;
+  margin:0 auto;
+  padding-right:15px;
+  box-sizing:border-box;
+  @media screen and (max-width:900px){
+    padding-right:10px;
+  }
+  @media screen and (max-width:768px){
+    justify-content:center;
+    padding:15px;
+  }
+  
 `
 const ProfileWraper=styled.div`
   width:85%;
   margin:0 auto;
-  top:6vh;
-  height:370px;
-  position:absolute;
-  left:11vh;
+  height:410px;
   background-color:#fff;
   z-index: 10;
   border-radius:10px;
   box-shadow: #cac5c5 2px 4px 8px ;
   padding:20px;
+  box-sizing:border-box;
+  @media screen and (max-width:768px){
+    width:93%;
+  }
+  @media screen and (max-width:485px){
+    width:100%;
+  }
 `
 const ProfilePictureBox=styled.div`
   height:130px;
-  background-color:#270c8a;
+  background-color:#174978;
   border-radius:10px;
   margin: 0 auto;
   display:flex;
@@ -44,6 +79,9 @@ const ProfilePictureBox=styled.div`
 
 const Name=styled.h1`
   color:#fff;
+  @media screen and (max-width:485px){
+    font-size:19px;
+  }
 `
 const Status=styled.p`
   color:#fff;
@@ -55,13 +93,16 @@ const Image=styled.img`
   object-fit:cover;
   border-radius:10px;
   margin-left:20px;
+  @media screen and (max-width:485px){
+    width:60px;
+    height:60px;  }
 `
 const Icon=styled.div`
   width:50px;
   height:50px;
   border-radius:15px;
-  border:1px solid #079481;
-  background-color: #cbe9e5;
+  border:1px solid #97EBF4;
+  background-color: #f3fafc;
   padding:5px;
   display:flex;
   justify-content:center;
@@ -71,7 +112,7 @@ const Private=styled.div`
   height:60px;
   padding:10px;
   margin-top:30px;
-  background-color:#f3efef;
+  background-color:#edfbff;
   border-radius:10px;
   display:flex;
 `
@@ -91,14 +132,25 @@ const Number=styled.p`
 
 
 export default function Profile() {
-  const{user}=useUser()
+  const{user,login}=useUser()
   const ref = useRef<HTMLInputElement>(null);
   const onImageClick=()=>{
     if (ref.current) {
       ref.current.click();
     }  }
-  
+    useEffect(() => {
+      async function fetchData(){
+        try{
+        const response=await userRequest.get(`/find/${user._id}`)
+        login(response.data);
+        } catch(error){
+          console.error('Error fetching data:', error);
+        };
+      }
+        fetchData();
+    },[]); 
     return (
+      <ContainerWraper>
     <Container>
       <ProfileWraper>
         <ProfilePictureBox>
@@ -129,5 +181,6 @@ export default function Profile() {
         </Private>
       </ProfileWraper>
     </Container>
+    </ContainerWraper>
   )
 }

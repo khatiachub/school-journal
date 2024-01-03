@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { publicRequest } from '../components/requestmethods';
 import { useUser } from '../components/UserContext';
-import { SyntheticEvent } from 'react'; // Import the SyntheticEvent type
+import { SyntheticEvent, useEffect } from 'react'; // Import the SyntheticEvent type
 
 
 const Image = styled.div`
@@ -14,9 +14,10 @@ const Image = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
-  background-position:right;
-  right:0;
-  position: fixed;
+  background-position:left;
+  @media screen and (max-width:920px) {
+    display:none
+  }
 `;
 const Input=styled.input`
   width:300px;
@@ -28,37 +29,48 @@ const Input=styled.input`
 `
 const Button=styled.button`
   width:300px;
+  margin-top:20px;
+  color:#fff;
+  font-size:20px;
   height:50px;
-  border:1px solid #3317ad;
+  border:1px solid #5e94fa;
   border-radius:36px;
   margin-top:20px;
+  background-color:#5e94fa;
 `
 const Title=styled.h3`
   color:#fff;
-  margin-left:50px;
   margin-top:20px;
 `
 const Form=styled.form`
-  width:40%;
+  width:100%;
   display:flex;
   flex-direction:column;
+  justify-content:center;
+  align-items:center;
 `
 const FormWraper=styled.div`
   display:flex;
   justify-content:center;
   flex-direction:column;
   align-items:center;
-  width:40%;
-`
+  width:40%;  
+  min-height:100vh;
+  @media screen and (max-width:920px) {
+    width:100%;
+  }`
 const Container=styled.div`
    display:flex;
-   background-color:#101291;
-   height:100vh;
+   background-color:#003A6B;
+   min-height:100vh;
+   width:100%;
+   @media screen and (max-width:920px) {
+    justify-content:center;
+  }
 `
 const TitleLink=styled(Link)`
    color:#fff;
    margin-top:20px;
-   margin-left:50px;
 `
 export default function Login() {
   const { register, handleSubmit,watch,getValues, reset, formState: { errors } } = useForm();
@@ -72,33 +84,35 @@ export default function Login() {
     email: string;
     password: string;
   }
+  
+  const nav=useNavigate()
   const loginUser = async (users:LoginFormValues) => {
     try {
       const res = await publicRequest.post("/signin",users);
       console.log(res.data);
       login(res.data)
-      console.log(user);
-      
+      nav("/")
     } catch (err) {
       console.log(err);
     }
   };
-  const nav=useNavigate()
-  const handleClick=(e:SyntheticEvent)=>{
-    e.preventDefault();
+  const handleClick=()=>{
     loginUser({email,password});
-    nav("/")
   }
+
+
+  
   return (
     <Container>
       <FormWraper>
       <Title>შესვლა</Title>
-      <Form >
+      <Form onSubmit={handleSubmit(handleClick)}>
         <Input {...Email} name='email' type='email' placeholder='email'/>
         <Input {...Password} name='password' type='password' placeholder='password'/>
-        <Button onClick={(e)=>handleClick(e)}>შესვლა</Button>
+        <Button type='submit'>შესვლა</Button>
       </Form>
-      <TitleLink to={'/'}>პაროლის აღდგენა</TitleLink>
+      <TitleLink to={'/recoverpassword'}>პაროლის აღდგენა</TitleLink>
+      <TitleLink to={'/register'}>არ გაქვს ანგარიში? დარეგისტრირდი</TitleLink>
       </FormWraper>
       <Image/>
     </Container>

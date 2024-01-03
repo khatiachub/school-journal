@@ -6,7 +6,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 interface User {
   _id: string;
   username: string;
-  accesstoken:string;
+  accessToken:string;
   confirmpassword:string;
   email:string
   lastname:string;
@@ -14,7 +14,7 @@ interface User {
   privatenumber:string;
   status:string;
   verified:boolean;
-  image:string
+  image:string;
 }
 interface UserContextType {
   user: User | null;
@@ -22,13 +22,17 @@ interface UserContextType {
   logout: () => void;
   studentGrade: (grade: any) => void; 
   studentGrades: any; 
+  token:string;
 }
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState(null);
   const[studentGrades,setStudentGrades]=useState({})
+  const[token,setToken]=useState('')
 
+
+  
   useEffect(() => {
     // Check localStorage for saved user information during initialization
     const storedUser = JSON.parse(localStorage.getItem('user')||'null');
@@ -43,11 +47,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setStudentGrades(storedUser);
     }
   }, []);
+  useEffect(() => {
+    // const storedUser = JSON.parse(localStorage.getItem('token')||'null');
+    const storedUser=localStorage.getItem('token')
+
+    if (storedUser) {
+      setToken(storedUser);
+    }
+  }, []);
+
+
   const login = (userData:User) => {
-    // Assume that your server returns user data upon successful login
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
+    setToken(userData.accessToken)
+    localStorage.setItem('token', JSON.stringify(userData.accessToken));
   };
+  
   const studentGrade=(grade:any)=>{
     setStudentGrades(grade)
     localStorage.setItem('id', JSON.stringify(studentGrades));
@@ -56,10 +72,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout,studentGrade,studentGrades }}>
+    <UserContext.Provider value={{ user, login, logout,studentGrade,studentGrades,token}}>
       {children}
     </UserContext.Provider>
   );

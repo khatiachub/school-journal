@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { subjects } from '../components/data'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
+import { useUser } from '../components/UserContext';
+import { publicRequest, userRequest } from '../components/requestmethods';
 
 
 const SubjectBox=styled.div`
@@ -15,10 +18,9 @@ const SubjectBox=styled.div`
 const SubjectsDiv=styled.div`
   display:flex;
   justify-content:space-between;
-  width:70%;
+  width:95%;
   flex-wrap:wrap;
   margin:0 auto;
-  margin-top:20vh;
 `
 const LinkSubject=styled.div`
   text-decoration:none;
@@ -66,12 +68,55 @@ const TeacherWraper=styled.div`
   padding:20px;
   color:#fff;
 `
+const BackArrow=styled.div`
+    width:100%;
+    margin:0 auto;
+    height:50px;
+    background-color: #fdfbfb;
+    margin-top:30px;
+    color:#494747;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    padding-left:10px;
+    box-sizing:border-box;
+`
 export default function Subjects() {
   
   const getRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+  const nav=useNavigate()
+    const handleClick=()=>{
+        nav('/')
+    }
+    const[id,setId]=useState([])
+  const{user}=useUser()
+  console.log(user);
+  
+  useEffect(()=>{
+    async function fetchData(){
+        try{
+        const response=await userRequest.get('/grade')
+        setId(response.data);  
+                  
+        } catch(error){
+          console.error('Error fetching data:', error);
+        };
+      }
+        fetchData();
+  },[])
+
+    const filteredId=id.filter((id:Student)=>(id.privatenumber==user?.privatenumber))
+  const filteredSubject=filteredId&&filteredId.map((id)=>(id.subjects.filter((subject)=>(subject.subject===params.sub))))
+  console.log(filteredSubject);
+  
   return (
     <SubjectsDiv>
-      <TeacherWraper>დამრიგებელი:</TeacherWraper>
+      {/* <TeacherWraper> */}
+      <BackArrow onClick={handleClick}>
+            <ArrowBackIosOutlinedIcon/>
+            დამრიგებელი:
+      </BackArrow>
+      {/* </TeacherWraper> */}
       {subjects.map((subject,i)=>(
         <SubjectBox key={i} style={{backgroundColor:getRandomColor()}}>
           <SubjectWrap>
@@ -86,7 +131,13 @@ export default function Subjects() {
             <Text>მასწავლებელი:</Text>
             </Teacher>
             <GradeWraper>
-            <Text>მიმდინარე სემესტრის შეფასება:</Text>
+            <Text>მიმდინარე სემესტრის შეფასება:
+            {filteredSubject&&filteredSubject.map((subject)=>(subject.map((subject:Subject)=>(subject.grades.map((grade)=>(
+               <div>
+               <p>{grade.grade}9</p>
+               </div>
+            ))))))}
+            </Text>
             <Text>დასწრება:</Text>
             <Text>წლიური შეფასება:</Text>
             </GradeWraper>

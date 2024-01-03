@@ -1,5 +1,5 @@
 import  { useEffect, useState } from 'react'
-import { publicRequest } from './requestmethods'
+import { userRequest } from './requestmethods'
 import styled from 'styled-components'
 import Table from './Table'
 
@@ -32,7 +32,7 @@ const Wraper=styled.div`
   display:flex;
   justify-content:space-between;
   align-items: start;
-  margin-top:150px;
+  margin-top:110px;
   margin-left:100px;
   @media screen and (max-width:768px) {
     margin-left:0;
@@ -126,8 +126,11 @@ const[students,setStudents]=useState<Students[]>([])
     useEffect(()=>{
         async function fetchData(){
             try{
-            const response=await publicRequest.get(`/grade`)
+            const response=await userRequest.get(`/student/grade`)
             setStudents(response.data);
+            console.log(students);
+            
+            
             } catch(error){
               console.error('Error fetching data:', error);
             };
@@ -150,7 +153,7 @@ const[students,setStudents]=useState<Students[]>([])
   const addStudent=()=>{
     async function fetchData(){
       try{
-      const response=await publicRequest.post(`/student/grade`,state)
+      const response=await userRequest.post(`/student`,state)
       setStudents((prevArray) => [...prevArray, response.data]);
       } catch(error){
         console.error('Error fetching data:', error);

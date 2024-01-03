@@ -3,7 +3,7 @@ import { subjects} from './data'
 import { useParams } from 'react-router-dom'
 import Table from './Table'
 import styled from 'styled-components'
-import { publicRequest } from './requestmethods'
+import { userRequest } from './requestmethods'
 import { useUser } from './UserContext'
 import Accordeon from './Accordeon'
 
@@ -14,10 +14,12 @@ const Students=styled.div`
   margin-top:40px;
   display:flex;
   justify-content:center;
-  margin-left:100px;
+  margin-left:130px;
+  @media screen and (max-width:900px) {
+    max-width:600px;
+  }
   @media screen and (max-width:768px) {
     margin-left:0;
-    max-width:600px;
   }
   @media screen and (max-width:485px) {
       display:none;
@@ -34,8 +36,9 @@ const Select=styled.select`
   color:#262626;
   margin-top:15px;
   padding:5px;
+  box-sizing:border-box;
   border:1px solid #1CA3DE;
-  @media screen and (max-width:768px) {
+  @media screen and (max-width:900px) {
     max-width:600px;
     width:100%;
     margin-top:20px;
@@ -57,12 +60,12 @@ const Input=styled.input`
   height: 40px;
   border-radius: 5px;
   &::placeholder {
-    color: #fff ;
+    color: #262626 ;
     font-family: 'Cormorant Garamond', serif;
     padding-left:5px;
   }
   border:1px solid #1CA3DE;
-  @media screen and (max-width:768px) {
+  @media screen and (max-width:900px) {
     max-width:600px;
     width:100%;
     margin-top:20px;
@@ -79,14 +82,15 @@ const GradeDiv=styled.div`
     display:flex;
     justify-content:space-between;
     align-items:baseline;
-    margin-left:100px;
+    margin-left:130px;
     @media screen and (max-width:768px) {
     margin-left:0;
-    }
-    @media screen and (max-width:768px) {
+  }
+    @media screen and (max-width:900px) {
     flex-direction:column;
-    justify-content:center;
-    align-items:Center;
+    justify-content:start;
+    align-items:start;
+    max-width:600px;
   }
 `
 const Button=styled.button`
@@ -104,7 +108,7 @@ const Button=styled.button`
     background-color:#2c67dd;
     transition:0.5s;
    }
-   @media screen and (max-width:768px) {
+   @media screen and (max-width:900px) {
     max-width:600px;
     width:100%;
     margin-top:10px;
@@ -125,10 +129,12 @@ const Name=styled.p`
   }
   max-width:700px;
   width:100%;
-  margin-left:100px;
+  margin-left:130px;
+  @media screen and (max-width:900px) {
+    max-width:600px;
+  }
   @media screen and (max-width:768px) {
     margin-left:0;
-    max-width:600px;
   }
 `
 const Span=styled.span`
@@ -140,7 +146,7 @@ const Container=styled.div`
   display:flex;
   flex-direction:column;
   margin:0 auto;
-  margin-top:30vh;
+  margin-top:15vh;
   width:50%;
   justify-content:center;
   align-items:center;
@@ -155,6 +161,12 @@ const AccordeonWraper=styled.div`
     max-width:600px;
     width:100%;
   }
+`
+const AttendWraper=styled.div`
+  width:170px;
+  justify-content:space-between;
+  display:flex;
+  padding:10px 0px 10px 0px;
 `
 
 interface Students{
@@ -202,9 +214,9 @@ export default function Studentroom() {
     useEffect(()=>{
         async function fetchData(){
             try{
-            const response=await publicRequest.get(`/student/${id}/grade`)
+            const response=await userRequest.get(`/student/${id}/grade`)
             setStudents(response.data);  
-            studentGrade(response.data)         
+            studentGrade(response.data) 
             } catch(error){
               console.error('Error fetching data:', error);
             };
@@ -246,9 +258,8 @@ export default function Studentroom() {
 const addGrade=()=>{
   async function fetchData(){
     try{
-    const response=await publicRequest.post(`/student/${id}/grade`,newData)
+    const response=await userRequest.post(`/student/${id}/grade`,newData)
     setStudents(response.data);  
-    console.log(response.data);            
     } catch(error){
       console.error('Error fetching data:', error);
     };
@@ -257,7 +268,29 @@ const addGrade=()=>{
 }
 
 
-   console.log(students);
+const data = {
+        subject:state.subject,
+        grades:[
+            {
+                date:state.date,
+                grade:state.grade,
+                attendance:state.attendance==='კი'?true:false
+            }
+        ]
+};
+const editGrade=(id:string)=>{
+  async function fetchData(){
+    try{
+    const response=await userRequest.put(`/student/${params.id}/grade/${id}`,data)
+    console.log(response.data);
+    
+    } catch(error){
+      console.error('Error fetching data:', error);      
+    };
+  }
+    fetchData();
+    window.location.reload()
+}
    
   return (
       <Container >
@@ -273,17 +306,19 @@ const addGrade=()=>{
       </Select>
       <Input type='number'  name='grade' onChange={(e)=>handleFilter(e)} placeholder='Grade'/>
       <Input type='date' name='date' onChange={(e)=>handleFilter(e)} />
-      <Label >დასწრება</Label>
+      <AttendWraper>
+      <Label >დასწრება:</Label>
       <div style={{display:'flex'}}>
       <div style={{display:'flex'}}>
       <Label>კი</Label>
-      <Radio name='attendance' value='კი' onChange={(e)=>handleFilter(e)} type='radio'/>
+      <Radio style={{marginTop:10,marginLeft:5}} name='attendance' value='კი' onChange={(e)=>handleFilter(e)} type='radio'/>
       </div>
       <div style={{display:'flex',marginLeft:10}}>
       <Label>არა</Label>
-      <Radio name='attendance' value='არა' onChange={(e)=>handleFilter(e)} type='radio'/>
+      <Radio style={{marginTop:10,marginLeft:5}} name='attendance' value='არა' onChange={(e)=>handleFilter(e)} type='radio'/>
       </div>
       </div>
+      </AttendWraper>
       <Button onClick={addGrade}>დამატება</Button>
       </GradeDiv>
    
@@ -292,6 +327,9 @@ const addGrade=()=>{
       students={students}
       name={students.name}
       subject={state.subject}
+      editGrade={editGrade}
+      state={state}
+      setState={setState}
      />
      </Students>
      <AccordeonWraper>

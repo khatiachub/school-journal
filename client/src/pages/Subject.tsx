@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { publicRequest } from '../components/requestmethods'
+import { publicRequest, userRequest } from '../components/requestmethods'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components';
 import { useUser } from '../components/UserContext';
@@ -80,6 +80,7 @@ const InputDate=styled.input`
   }
 `
 const GradeTitle=styled.p`
+display:flex;
  @media screen and (max-width:600px) {
   margin-top:20px;
   }
@@ -172,35 +173,89 @@ interface Grades{
 
 export default function Subject() {
   const params = useParams<{ sub:string}>();
-  const[id,setId]=useState([])
+  const[id,setId]=useState({})
+  const[student,setStudent]=useState([])
   const{user}=useUser()
+
+  // useEffect(()=>{
+  //   async function fetchData(){
+  //       try{
+  //       const response=await userRequest.get('/student/grade')
+  //       setStudent(response.data);
+  //       } catch(error){
+  //         console.error('Error fetching data:', error);
+  //       };
+  //     }
+  //       fetchData();
+  // },[])
+
+
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await userRequest.get('/student/grade');
+        setStudent(response.data);
+        const filteredStudent = response.data.filter((student) => user?.privatenumber == student.privatenumber);
+        const filteredid = filteredStudent.map((id) => id._id);
+  
+        // Check if filteredId is defined before making the second request
+        if (filteredid && filteredid.length > 0) {
+          const secondResponse = await userRequest.get(`/student/${filteredid[0]}/grade`);
+          setId(secondResponse.data);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  }, [user?.privatenumber]); 
+  
+
+  const filteredSubject=id.subjects&&id.subjects.filter((subject)=>(subject.subject===params.sub))
+  console.log(filteredSubject);
   console.log(user);
   
-  useEffect(()=>{
-    async function fetchData(){
-        try{
-        const response=await publicRequest.get('/grade')
-        setId(response.data);  
-                  
-        } catch(error){
-          console.error('Error fetching data:', error);
-        };
-      }
-        fetchData();
-  },[])
-
-  const filteredId=id.filter((id:Student)=>(id.privatenumber==user?.privatenumber))
-  const filteredSubject=filteredId&&filteredId.map((id)=>(id.subjects.filter((subject:Subject)=>(subject.subject===params.sub))))
-  console.log(filteredSubject);
   
   const formatDate = (dateString:string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US').format(date);
   };
 
-  console.log(filteredId);
-  
-  
+
+  const totalGrade = filteredSubject
+  ? filteredSubject
+      .map((subject) => subject.grades.map((grade) => grade.grade))
+      .flat()
+      .filter((value) => !isNaN(value))
+      .reduce((acc, current) => acc + current, 0)
+  : 0;
+
+const numberOfGrades = filteredSubject
+  ? filteredSubject
+      .map((subject) => subject.grades.map(() => 1))
+      .flat()
+      .length
+  : 0;
+
+const averageGrade = numberOfGrades !== 0 ? totalGrade / numberOfGrades : 0;
+
+const current = filteredSubject
+  ? filteredSubject
+      .map((grade) =>
+        grade.grades
+          .map((grade2) => grade2.grade)
+          .join("")
+      )
+      .join(", ")
+  : "";
+
+console.log(current);
+
+
+
+
+
   return (
     <Container>
       <Wraper>
@@ -212,8 +267,11 @@ export default function Subject() {
       </SubjectsWraper>
       <TeacherWraper>
         <GradeDiv>
-        <GradeTitle>წლიური შეფასება:</GradeTitle>
-        <GradeTitle>მიმდინარე შეფასება:</GradeTitle>
+        <GradeTitle>წლიური შეფასება: {averageGrade}
+        </GradeTitle>
+        <GradeTitle>მიმდინარე შეფასება:
+          {current}
+          </GradeTitle>
         </GradeDiv>
        <GradeDiv>
        <GradeTitle>დასწრება:</GradeTitle>
@@ -230,22 +288,20 @@ export default function Subject() {
           </tr>
         </thead>
         <tbody>
-            {filteredSubject&&filteredSubject.map((subject)=>(subject.map((subject:Subject)=>(subject.grades.map((grade)=>(
-               <Tr>
-               <Td>{formatDate(grade.date)}</Td>
-               <Td>{grade.attendance?'დიახ':'არა'}</Td>
-               <Td>{grade.grade}</Td>
-               </Tr>
-            ))))))}
+            {filteredSubject&&filteredSubject.map((subject)=>(subject.grades.map((grade)=>(
+              <Tr>
+              <Td>{formatDate(grade.date)}</Td>
+              <Td>{grade.attendance?'დიახ':'არა'}</Td>
+              <Td>{grade.grade}</Td>
+              </Tr>
+            ))))}
         </tbody>
       </Table>
       <AccordeonWraper>
-      {filteredId&&filteredId.map((subject)=>(
       <Accordeon 
-      accordstudents={subject}
+      accordstudents={id}
       subject={params.sub}
       />
-      ))}
       </AccordeonWraper>
     </Container>
   )

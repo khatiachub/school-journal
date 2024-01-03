@@ -1,6 +1,5 @@
-
 import Journal from './components/Journal'
-import {BrowserRouter,Route,Routes} from "react-router-dom";
+import {BrowserRouter as Router,Navigate,Route,Routes} from "react-router-dom";
 import Studentroom from './components/Studentroom'
 import Root from './components/Root'
 import styled, { createGlobalStyle } from 'styled-components'
@@ -10,8 +9,10 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Subject from './pages/Subject';
-import Home from './pages/Home';
-
+import VerifyEmail from './components/VerifyEmail';
+import RecoverPassword from './pages/RecoverPassword';
+import UpdatePassword from './pages/UpdatePassword';
+import ChangePassword from './pages/ChangePassword';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -29,25 +30,30 @@ const BodyWrapper = styled.body`
 
 
 function App() {
-
+  
   return (
     <BodyWrapper>
     <GlobalStyle />
-    <BrowserRouter>
+    <Router>
     <Routes>
-      <Route path='/' element={<Root/>}>
-       <Route index  element={<Home/>}/>
+       <Route path='/login' element={<Login/>}/>
+       <Route path='/register' element={<Register/>}/>
+       <Route path='/:id/verify/:token'  element={<VerifyEmail/>}/>
+       <Route path='/recoverpassword/:id/:token'  element={<RecoverPassword/>}/>
+       <Route path='/recoverpassword'  element={<UpdatePassword/>}/>
+
+       <Route path='/' element={<Root/>}>
+       {/* <PrivateRoute index element={<Home/>}/> */}
        <Route path="/student/:id" element={<Studentroom/>}/>
        <Route path='/calendar' element={<Calendars/>}/>
        <Route path='/subjects' element={<Subjects/>}/>
        <Route path='/subjects/:sub' element={<Subject/>}/>
-       <Route path='/register' element={<Register/>}/>
-       <Route path='/login' element={<Login/>}/>
        <Route path='/profile/:id' element={<Profile/>}/>
        <Route path='/studentslist'  element={<Journal/>}/>
+       <Route path='/parameters/changepassword'  element={<ChangePassword/>}/>
        </Route>
     </Routes>
-    </BrowserRouter>    
+    </Router>    
     </BodyWrapper>
   )
 }

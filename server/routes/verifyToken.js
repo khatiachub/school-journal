@@ -20,7 +20,21 @@ const verifyTokenAndAuthorization = (req, res, next) => {
     });
   };
 
+  const verifyTokenAndTeacher = async(req, res, next) => {
+    await verifyToken(req, res, () => {
+      if (req.user.status==='მასწავლებელი') {
+        console.log(req.user);
+
+        
+        next();
+      } else {
+        console.log(req.user);
+        return res.status(403).json("students are not allowed to do this action!");
+      }
+    });
+  };
 module.exports = {
+    verifyTokenAndTeacher,
     verifyToken,
     verifyTokenAndAuthorization
   };

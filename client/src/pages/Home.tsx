@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { useUser } from '../components/UserContext'
 
 
 const Links=styled(Link)`
@@ -8,6 +9,8 @@ const Links=styled(Link)`
   font-size:25px;
 `
 export default function Home() {
+  const{user}=useUser()
+
   return (
     <div >
       <Links to={'/studentslist'}>საკლასო ოთახი</Links>
