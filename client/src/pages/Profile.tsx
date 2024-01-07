@@ -122,6 +122,9 @@ const PrivateNumber=styled.div`
 const NumberValue=styled.h3`
  margin-top:10px;
  color:#413e3e;
+@media screen and (max-width:485px) {
+  font-size:14px;
+}
 `
 const Number=styled.p`
  color:#c0bcbc;

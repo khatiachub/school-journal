@@ -61,11 +61,13 @@ router.post("/signup",upload.none(), async(req,res)=>{
         user?.password,
         process.env.PASS_SEC
     );
-    CryptoJS.AES.decrypt(
-      user?.confirmpassword,
-      process.env.PASS_SEC
-  );
+  //   CryptoJS.AES.decrypt(
+  //     user?.confirmpassword,
+  //     process.env.PASS_SEC
+  // );
   const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+  console.log(originalPassword);
+
       if(originalPassword!==req.body.password){
          return console.log("incorrect password");
       }

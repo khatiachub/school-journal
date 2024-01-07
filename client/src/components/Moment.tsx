@@ -59,7 +59,7 @@ const CalendarStyle = styled(Calendar)`
     color: #fff;
     border: 1px solid #ffffff;
     border-radius: 4px;
-    height: 60px;
+    height: 40px;
     display:flex;
     box-sizing:border-box;
     align-items:center;

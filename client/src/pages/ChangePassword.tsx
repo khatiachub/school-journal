@@ -14,6 +14,9 @@ const Container=styled.div`
   justify-content:center;
   align-items:center;
   position: relative;
+  position:fixed;
+  top:0;
+  left:0;
 `
 const Input=styled.input`
     width:300px;

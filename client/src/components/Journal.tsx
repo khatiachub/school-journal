@@ -2,14 +2,20 @@ import  { useEffect, useState } from 'react'
 import { userRequest } from './requestmethods'
 import styled from 'styled-components'
 import Table from './Table'
+import { useUser } from './UserContext'
+import Subjects from '../pages/Subjects'
 
 
 const Students=styled.div`
-  max-width:600px;
+  max-width:900px;
   width:100%;
   margin-top:40px;
-  margin-left:100px;
-  @media screen and (max-width:768px) {
+  margin-left:120px;
+  @media screen and (max-width:1190px) {
+    margin-left:100px;
+    max-width:600px;
+  }
+    @media screen and (max-width:768px) {
     margin-left:0;
   }
   `
@@ -27,13 +33,17 @@ const Container = styled.div`
   }
 `
 const Wraper=styled.div`
-  max-width:600px;
+  max-width:900px;
   width:100%;
   display:flex;
   justify-content:space-between;
   align-items: start;
   margin-top:110px;
-  margin-left:100px;
+  margin-left:120px;
+  @media screen and (max-width:1190px) {
+    margin-left:100px;
+    max-width:600px;
+  }
   @media screen and (max-width:768px) {
     margin-left:0;
   }
@@ -123,6 +133,7 @@ interface Grades{
 }
 export default function Journal() {
 const[students,setStudents]=useState<Students[]>([])
+const {user}=useUser()
     useEffect(()=>{
         async function fetchData(){
             try{
@@ -136,10 +147,7 @@ const[students,setStudents]=useState<Students[]>([])
             };
           }
             fetchData();
-      },[])
-     
-
-
+      },[user])
 
   const[state,setState]=useState(
     {
@@ -164,10 +172,10 @@ const[students,setStudents]=useState<Students[]>([])
 
   }
   
-  console.log(students);
-  
 
   return (
+    <>
+    {user?.status==='მასწავლებელი'?
     <Container>
     <Wraper>
       <Subjectwraper >
@@ -187,6 +195,9 @@ const[students,setStudents]=useState<Students[]>([])
         state={state}
         />
     </Students>
-    </Container>
+    </Container>:
+    <Subjects/>
+    }
+    </>
   )
 }

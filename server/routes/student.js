@@ -23,27 +23,34 @@ router.post("/student/:id/grade",verifyTokenAndTeacher, async (req, res) => {
 });
 
 // qulis editi
-router.put("/student/:id/grade/:subjectId",verifyTokenAndTeacher, async (req, res) => {
-  const studentId = req.params.id;
-  const subjectId = req.params.subjectId;
+router.put("/student/:id/grade/:subjectId", verifyTokenAndTeacher, async (req, res) => {
+  const { id, subjectId } = req.params;
+  const { grade } = req.body;
+
   try {
-    console.log(req.body);
     const updatedUser = await Grade.findOneAndUpdate(
-      { _id: studentId, "subjects._id": subjectId },
+      { _id: id, "subjects._id": subjectId }, // Find by both student _id and subject _id within the array
       {
         $set: {
-          "subjects.$.subject": req.body.subject,
-          "subjects.$.grades": req.body.grades,
+          "subjects.$[s].grades.$[g].grade": grade,
         },
       },
+      {
+        arrayFilters: [
+          { "s._id": mongoose.Types.ObjectId(subjectId) },
+          { "g._id": mongoose.Types.ObjectId(req.body.gradeId) },
+        ],
+        new: true,
+      }
     );
+    console.log(updatedUser);
 
     res.status(200).json(updatedUser);
-
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
 
 //qulis washla
 router.delete("/student/:id/grade/:subjectId", async (req, res) => {
@@ -87,6 +94,7 @@ router.delete("/student/:id",verifyTokenAndTeacher, async (req, res) => {
 
 // moswavlis saxelis editi
 router.put("/student/:id/grade",verifyTokenAndTeacher, async (req, res) => {
+  
   try {
     const updatedUser = await Grade.findByIdAndUpdate(
       req.params.id,

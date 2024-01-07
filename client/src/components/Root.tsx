@@ -2,7 +2,7 @@ import { Outlet, useLocation, useNavigate ,Navigate} from 'react-router-dom'
 import Header from './Header'
 import styled from 'styled-components';
 import { useUser } from './UserContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
@@ -21,11 +21,9 @@ export default function Root() {
     }
   }
   const auth=useAuth();
-  useEffect(()=>{
-    if(user?.accessToken===''){
-      logout()
-    }
-  },[user?.accessToken])
+  const nav=useNavigate()
+
+
   
   return(
     auth?

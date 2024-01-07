@@ -9,12 +9,15 @@ import Accordeon from './Accordeon'
 
 
 const Students=styled.div`
-  max-width:700px;
+  max-width:950px;
   width:100%;
   margin-top:40px;
   display:flex;
   justify-content:center;
-  margin-left:130px;
+  margin-left:120px;
+  @media screen and (max-width:1200px) {
+    max-width:700px;
+  }
   @media screen and (max-width:900px) {
     max-width:600px;
   }
@@ -76,21 +79,24 @@ const Title=styled.h3`
     
 `
 const GradeDiv=styled.div`
-    max-width:700px;
+    max-width:950px;
     width:100%;
     margin-top: 30px;
     display:flex;
     justify-content:space-between;
     align-items:baseline;
-    margin-left:130px;
-    @media screen and (max-width:768px) {
-    margin-left:0;
+    margin-left:120px;
+    @media screen and (max-width:1200px) {
+    max-width:700px;
   }
     @media screen and (max-width:900px) {
     flex-direction:column;
     justify-content:start;
     align-items:start;
     max-width:600px;
+  }
+    @media screen and (max-width:768px) {
+    margin-left:0;
   }
 `
 const Button=styled.button`
@@ -122,14 +128,17 @@ const Name=styled.p`
   padding:10px;
   box-sizing:border-box;
   &:nth-child(even) {
-    background-color: #ddd;
+    background-color:#f7f6f6;  
   }
   &:nth-child(odd) {
     background-color:#1CA3DE ;
   }
-  max-width:700px;
+  max-width:950px;
   width:100%;
-  margin-left:130px;
+  margin-left:120px;
+  @media screen and (max-width:1200px) {
+    max-width:700px;
+  }
   @media screen and (max-width:900px) {
     max-width:600px;
   }
@@ -225,17 +234,16 @@ export default function Studentroom() {
       },[])
         
 
+  console.log(students);
   
   const[state,setState]=useState({
-      week:'',
-      day:'',
       grade:null,
       subject:'',
       date:'',
       attendance:''
     })
     
-      
+
   const handleFilter=(e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>)=>(
       setState({...state,[e.target.name]:e.target.value})
     )
@@ -268,22 +276,12 @@ const addGrade=()=>{
 }
 
 
-const data = {
-        subject:state.subject,
-        grades:[
-            {
-                date:state.date,
-                grade:state.grade,
-                attendance:state.attendance==='კი'?true:false
-            }
-        ]
-};
+
 const editGrade=(id:string)=>{
   async function fetchData(){
     try{
-    const response=await userRequest.put(`/student/${params.id}/grade/${id}`,data)
+    const response=await userRequest.put(`/student/${params.id}/grade/${id}`,state)
     console.log(response.data);
-    
     } catch(error){
       console.error('Error fetching data:', error);      
     };
@@ -304,7 +302,7 @@ const editGrade=(id:string)=>{
            <Option   key={sub.subjectId}>{sub.subject}</Option>
            ))}
       </Select>
-      <Input type='number'  name='grade' onChange={(e)=>handleFilter(e)} placeholder='Grade'/>
+      <Input type='number'  name='grade' onChange={(e)=>handleFilter(e)} placeholder='ქულა'/>
       <Input type='date' name='date' onChange={(e)=>handleFilter(e)} />
       <AttendWraper>
       <Label >დასწრება:</Label>

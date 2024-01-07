@@ -4,6 +4,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import { userRequest } from './requestmethods';
+import { useUser } from './UserContext';
 
 
 const LinkStudent=styled(Link)`
@@ -226,12 +227,12 @@ export default function Table (props:Props){
       }
     }; 
     
-    
+    const{user}=useUser()
   return (
        <TableBox>
       <thead>
         <Tr >
-            {loc.pathname==='/studentslist'?
+            {loc.pathname==='/'&&user?.status==='მასწავლებელი'?
             <>
             <Th>პირადი ნომერი</Th>
             <Th>სახელი</Th>
@@ -252,7 +253,7 @@ export default function Table (props:Props){
         <tr>
           {/* //saerto cxrili id */}
           <Tdborder >
-           {loc.pathname==='/studentslist'?
+           {loc.pathname==='/'&&user?.status==='მასწავლებელი'?
            <>
            {props.students&&props.students.map((student)=>(
            <Td style={{borderRight:'none'}}  key={student._id}>{student.privatenumber}</Td>
@@ -266,11 +267,9 @@ export default function Table (props:Props){
             subject.grades.map((date)=>(
             // <Td key={date._id}>{formatDate(date?.date)}</Td>
             <Td key={subject._id}>
-            {edit&&subject._id===id?
               <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
-            <div  className='list'><Input value={props.state.date} placeholder='შეცვალე თარიღი' onChange={(e)=>handleChange(e)} name='date' /></div>
            </div>
-            : formatDate(date?.date)}
+            { formatDate(date?.date)}
           </Td>
             ))
            ))}
@@ -279,14 +278,14 @@ export default function Table (props:Props){
            </Tdborder >
 
            {/* saerto cxrili editiiiiiiiiiiiiii */}
-           {loc.pathname==='/studentslist'?
+           {loc.pathname==='/'&&user?.status==='მასწავლებელი'?
            <Tdborder>
            {props.students&&props.students.map((student)=>(
             
            <Td  key={student._id}>
                 {edit&&student._id===id?
                  <div style={{display:'flex', alignItems:'center'}}>
-                  <LinkStudent key={student.privatenumber} to={''} className='list'><Input value={student.name} placeholder='change name' onChange={(e)=>handleChange(e)} name='name' /></LinkStudent>
+                  <LinkStudent key={student.privatenumber} to={''} className='list'><Input  placeholder='change name' onChange={(e)=>handleChange(e)} name='name' /></LinkStudent>
                   <Button onClick={()=>editName(student._id)}>Change</Button>
                  </div>
                   :
@@ -296,7 +295,7 @@ export default function Table (props:Props){
             
             ))}
             </Tdborder>:''}
-            {loc.pathname==='/studentslist'?props.students&&props.students.map((student)=>(
+            {loc.pathname==='/'&&user?.status==='მასწავლებელი'?props.students&&props.students.map((student)=>(
             <>
             <Td   key={student._id}>
                 <DeleteIcon  onClick={()=>deleteStudent(student._id)}>
@@ -314,12 +313,11 @@ export default function Table (props:Props){
           <Tdborder >
           {filteredSubject&&filteredSubject.map((subject:Subject)=>(
             <Td key={subject._id}>
-                 {edit&&subject._id===id?
                    <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
-                 <div  className='list'><Input value={subject.subject} placeholder='შეცვალე საგანი' onChange={(e)=>handleChange(e)} name='subject' /></div>
                 </div>
-                 :subject.subject}
-            </Td>                  ))}
+                 {subject.subject}
+            </Td>                  
+            ))}
 
           </Tdborder>
             <Tdborder>
@@ -327,11 +325,9 @@ export default function Table (props:Props){
              {filteredSubject&&filteredSubject.map((subject:Subject)=>(
                  subject.grades.map((grade)=>(
                  <Td key={subject._id}>
-                 {edit&&subject._id===id?
                    <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
-                 <div  className='list'><Input value={grade.attendance?'კი':'არა'} placeholder='შეცვალე დასწრება' onChange={(e)=>handleChange(e)} name='attendance' /></div>
                 </div>
-                 : grade.attendance?'კი':'არა'}
+                  {grade.attendance?'კი':'არა'}
                </Td>
                  ))
               ))}
@@ -344,7 +340,7 @@ export default function Table (props:Props){
                 <Td key={subject._id}>
                   {edit&&subject._id===id?
                     <div style={{display:'flex', alignItems:'baseline',justifyContent:'space-between'}}>
-                  <div  className='list'><Input value={grade.grade} placeholder='შეცვალე ქულა' onChange={(e)=>handleChange(e)} name='grade' /></div>
+                  <div  className='list'><Input  placeholder='შეცვალე ქულა' onChange={(e)=>handleChange(e)} name='grade' /></div>
                   <Button onClick={()=>props.editGrade(subject._id)}>Change</Button>
                  </div>
                   :grade.grade}
@@ -361,9 +357,10 @@ export default function Table (props:Props){
               <DeleteIcon   onClick={()=>deleteGrade(subject._id)}>
                <DeleteOutlineOutlinedIcon/>
                </DeleteIcon>
+               {loc.pathname==='/'?
                <EditIcon   onClick={()=>handleEditGrade(subject._id)}>
                <ModeEditOutlineOutlinedIcon/>
-               </EditIcon>
+               </EditIcon>:''}
               </Td>
             ))
            }

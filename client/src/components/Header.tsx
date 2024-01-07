@@ -14,7 +14,7 @@ import { useUser } from './UserContext';
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 // rgb(59 130 246 / .5)
 
 interface Props {
@@ -79,7 +79,7 @@ const Notific=styled.div`
    width:40px;
    height:40px;
    border-radius:8px;
-   background-color: #a7a3a3;
+   background-color: #e6e0e0;
    display:flex;
    justify-content:center;
    align-items:center;
@@ -144,13 +144,10 @@ const User=styled.p`
 `
 const Navbar=styled.div<Props>`
   width:75px;
-  height:500px;
+  height:400px;
   border-radius:10px;
   background-color:#174978;
-  padding:15px;
-  /* position:fixed;
-  top:30px;
-  left:20px; */
+  padding:0px 15px 15px 15px;
   @media screen and (max-width:768px){
     width: ${(props) => (props.state?'100%': '75px')};
     transform: ${(props) => (props.state ? 'translateX(0px)' : 'translateX(-500px)')};
@@ -197,7 +194,7 @@ const Wraper=styled(Link)`
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  margin-top:30px;
+  margin-top:40px;
   @media screen and (max-width:768px){
     flex-direction:row;
     align-items:center;
@@ -296,6 +293,10 @@ const logOut=()=>{
         </NavWraper>
         </NavbarMenu>
         :''}
+         <Wraper to={`/`}>
+         <HomeOutlinedIcon style={{color:'#fff'}}/>
+         <Text>მთავარი</Text>
+       </Wraper>
         <Wraper to={'/register'}>
           <Person2OutlinedIcon style={{color:'#fff'}}/>
           <Text>რეგისტრაცია</Text>
@@ -312,21 +313,16 @@ const logOut=()=>{
           <CalendarTodayOutlinedIcon style={{color:'#fff'}}/>
           <Text>კალენდარი</Text>
         </Wraper>
-        {user?.status==='მოსწავლე'?
+        {/* {user?.status==='მოსწავლე'?
         <Wraper to={'/subjects'}>
           <SubjectOutlinedIcon style={{color:'#fff'}}/>
           <Text>საგნები</Text>
-        </Wraper>:''}
+        </Wraper>:''} */}
         <Wraper to={`/profile/${user?._id}`}>
           <AccountCircleOutlinedIcon style={{color:'#fff'}}/>
           <Text>პროფილი</Text>
         </Wraper>
-        {user?.status==='მასწავლებელი'?
-         <Wraper to={`/studentslist`}>
-         <AccountCircleOutlinedIcon style={{color:'#fff'}}/>
-         <Text>მოსწავლე</Text>
-       </Wraper>
-        :''}
+        
       </Navbar>
       {/* </HeaderBox> */}
 

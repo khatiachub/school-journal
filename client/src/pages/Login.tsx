@@ -92,12 +92,14 @@ export default function Login() {
       console.log(res.data);
       login(res.data)
       nav("/")
+      window.location.reload()
     } catch (err) {
       console.log(err);
     }
   };
   const handleClick=()=>{
     loginUser({email,password});
+    
   }
 
 

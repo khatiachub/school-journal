@@ -32,9 +32,10 @@ const Img=styled.img`
 export default function VerifyEmail() {
     const{user}=useUser()
     const params=useParams()
+    const[success,setSuccess]=useState(false)
     const nav=useNavigate()
     useEffect(()=>{
-        if(user?.verified){
+        if(success){
             const timeoutId = setTimeout(() => {
                 nav('/login'); 
               }, 3000);
@@ -43,7 +44,8 @@ export default function VerifyEmail() {
             return
         }
       
-       },[user?.verified])
+       },[success])
+    console.log(user);
     
     
     useEffect(()=>{
@@ -51,6 +53,7 @@ export default function VerifyEmail() {
             try{
                 const url=`/${params.id}/verify/${params.token}`
                 const{data}=await userRequest.get(url)
+                setSuccess(true)
             }catch(error){
                  console.log(error);
                  
@@ -60,7 +63,7 @@ export default function VerifyEmail() {
     },[params])
   return (
     <>
-        {user?.verified?
+        {success?
         <SuccessVerify>
             <p>
             Email verified successfully

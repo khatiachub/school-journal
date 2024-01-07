@@ -43,13 +43,13 @@ function App() {
        <Route path='/recoverpassword'  element={<UpdatePassword/>}/>
 
        <Route path='/' element={<Root/>}>
-       {/* <PrivateRoute index element={<Home/>}/> */}
+       <Route index element={<Journal/>}/>
        <Route path="/student/:id" element={<Studentroom/>}/>
        <Route path='/calendar' element={<Calendars/>}/>
        <Route path='/subjects' element={<Subjects/>}/>
        <Route path='/subjects/:sub' element={<Subject/>}/>
        <Route path='/profile/:id' element={<Profile/>}/>
-       <Route path='/studentslist'  element={<Journal/>}/>
+       {/* <Route path='/studentslist'  element={<Journal/>}/> */}
        <Route path='/parameters/changepassword'  element={<ChangePassword/>}/>
        </Route>
     </Routes>
