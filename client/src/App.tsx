@@ -1,5 +1,5 @@
 import Journal from './components/Journal'
-import {BrowserRouter as Router,Navigate,Route,Routes} from "react-router-dom";
+import {BrowserRouter as Router,Route,Routes} from "react-router-dom";
 import Studentroom from './components/Studentroom'
 import Root from './components/Root'
 import styled, { createGlobalStyle } from 'styled-components'
@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
     /* box-sizing: border-box; */
     margin: 0;
     padding: 0;
+    font-family: 'Noto Sans Georgian', sans-serif;
   }
 `
 const BodyWrapper = styled.body`

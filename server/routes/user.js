@@ -2,18 +2,29 @@ const User=require("../models/User")
 const express=require("express");
 const router=express.Router();
 const jwt=require("jsonwebtoken")
-const multer = require('multer');
-const upload = multer();
 const Token = require("../models/Token");
 const { verifyTokenAndAuthorization } = require("./verifyToken");
 const sendEmail=require('./emailsend')
 const crypto = require('crypto');
 const Useremail = require("../models/Usermail");
 const CryptoJS = require('crypto-js');
-const { log } = require("console");
+const multer = require('multer');
 
 
-router.post("/signup",upload.none(), async(req,res)=>{
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '../images'); // Define the destination folder for uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname); // Define the filename for uploaded files
+  },
+});
+const upload = multer({ storage });
+
+
+router.post("/signup", async(req,res)=>{
     let {name,lastname,email,privatenumber,status,password,confirmpassword}=req.body
     console.log("Request body:", req.body);
 
@@ -61,10 +72,6 @@ router.post("/signup",upload.none(), async(req,res)=>{
         user?.password,
         process.env.PASS_SEC
     );
-  //   CryptoJS.AES.decrypt(
-  //     user?.confirmpassword,
-  //     process.env.PASS_SEC
-  // );
   const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
   console.log(originalPassword);
 
@@ -78,7 +85,7 @@ router.post("/signup",upload.none(), async(req,res)=>{
           status:user.status
         },
         process.env.JWT_SEC,
-        {expiresIn:"10h"}
+        // {expiresIn:"10h"}
       );
       const { password, ...others } = user._doc;
       if(!user.verified){
@@ -124,15 +131,13 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //UPDATE
-router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  // if (req.body.password) {
-  //     req.body.password = CryptoJS.AES.encrypt(
-  //     req.body.password,
-  //     process.env.PASS_SEC
-  //   ).toString();
-  // }
- 
+router.put("/:id",upload.single('image'), verifyTokenAndAuthorization, async (req, res) => {
   try {
+    const{image}=req.body
+    if (req.file) {
+      // Save the file path to the user's profile photo field
+      req.body.image = req.file.path;
+    }
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
@@ -145,6 +150,23 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     res.status(500).json(err);
   }
 });
+//delete profile image
+router.delete("/:id/image", verifyTokenAndAuthorization, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.status(200).json("avatar has been deleted...");
+    if (!user.image) {
+      return res.status(400).json("User does not have an image");
+    }
+    user.image = undefined;
+    await user.save();
+
+    return res.status(200).json("User image has been deleted...");
+
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 //change password
 
@@ -153,34 +175,26 @@ router.put('/changepassword/:id', verifyTokenAndAuthorization, async (req, res) 
   const { password, newPassword,confirmNewpassword } = req.body;
 
   try {
-    // Find the user by ID
     const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Verify the current password
     const decryptedPassword = CryptoJS.AES.decrypt(user.password, process.env.PASS_SEC).toString(CryptoJS.enc.Utf8);
-    // console.log(decryptedPassword);
     if (password !== decryptedPassword) {
       return res.status(401).json({ error: 'Incorrect current password' });
     }
     if (newPassword !== confirmNewpassword) {
       return res.status(400).json({ error: 'New password and confirm password do not match' });
     }
-    // Update the user's password
     const encryptedNewPassword = CryptoJS.AES.encrypt(newPassword, process.env.PASS_SEC).toString();
     const encryptedNewConfirmPassword = CryptoJS.AES.encrypt(confirmNewpassword, process.env.PASS_SEC).toString();
     user.password= encryptedNewPassword;
     user.password=encryptedNewConfirmPassword;
-
     user.confirmpassword= encryptedNewPassword
     user.confirmpassword=encryptedNewConfirmPassword
-
-    // Save the updated user data
     const updatedUser = await user.save();
-
     res.status(200).json(updatedUser);
   } catch (err) {
     res.status(500).json(err);

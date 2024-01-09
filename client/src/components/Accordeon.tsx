@@ -11,13 +11,14 @@ const Accordbox=styled.div`
   max-width:600px;
   width:100%;
   height:40px;
-  background-color:#f3f0f0;
+  background-color:#faf6f6;
   position: relative;
   margin-top:20px;
   padding:10px 0px 20px 0px;
   transition:0.5s;
   border-radius:10px;
   box-shadow: #cac5c5 2px 4px 8px ;
+  color:#262626;
 
 `
 const Arrowdown=styled.div`
@@ -62,16 +63,17 @@ interface Student {
   name: string;
   subjects:Subject[];
 }
-interface Props{
-  accordstudents:Student[];
-  subject:string|undefined;
-}
 interface State {
   [key: string]: boolean;
 }
+interface AccordeonProps {
+  accordstudents:Student|any; 
+  subject: string|undefined;
+}
 
 
-export default function Accordeon(props:Props) {
+const Accordeon:React.FC<AccordeonProps> =(props)=> {
+
     const filteredSubject=props.accordstudents.subjects&&props.accordstudents.subjects.filter((subject:Subject)=>(subject.subject===props.subject))
     const formatDate = (dateString:string) => {
       if(dateString){
@@ -81,9 +83,6 @@ export default function Accordeon(props:Props) {
         return
       }
     }; 
-
-
-   
     const[state,setState]=useState<State>({})
     const handleClick=(Id:string)=>{
         setState({...state,[Id]:!state[Id]})
@@ -159,3 +158,4 @@ export default function Accordeon(props:Props) {
       </div>
   )
 }
+export default Accordeon

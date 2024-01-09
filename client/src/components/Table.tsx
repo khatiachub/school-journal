@@ -119,6 +119,13 @@ const Button=styled.button`
    border:none;
    font-size:14px;
 `
+const GradeDeleteIcon=styled.div`
+    color:#1CA3DE;
+    text-align:center;
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+`
 
 interface Grade {
   date: string;
@@ -139,30 +146,33 @@ interface Student {
   subjects:Subject[];
 }
 
-interface Props {
-  students: Student[];
-  setStudents: React.Dispatch<React.SetStateAction<Student[]>>;
-  subject: string;
+interface State{
+  grade:number|null;
+  subject:string;
+  attendance:boolean|string;
+  date:string
 }
 
-
-
-
-
-
-export default function Table (props:Props){
+interface Props {
+  students:Student[]|any;
+  setStudents: React.Dispatch<React.SetStateAction<Student[]>>;
+  subject: string;
+  setState: React.Dispatch<React.SetStateAction<State>>;
+  state:State;
+  editGrade:(id:string)=>void;
+}
+export default function Table (props:Props|any){
     const loc=useLocation()
     const deleteStudent=(id:string)=>{
       async function fetchData(){
         try{
-        const response=await userRequest.delete(`/student/${id}`)
-        console.log(response.data);
+        await userRequest.delete(`/student/${id}`)
         } catch(error){
           console.error('Error fetching data:', error);
         };
       }
         fetchData();
-        const students = props.students.filter((item) => item._id !== id);
+        const students = props.students.filter((item:Student) => item._id !== id);
         props.setStudents(students)
     }
     const[name,setName]=useState({name:''})
@@ -181,8 +191,7 @@ export default function Table (props:Props){
       }
       async function fetchData(){
         try{
-        const response=await userRequest.put(`/student/${id}/grade`,name)
-        console.log(response.data);
+        await userRequest.put(`/student/${id}/grade`,name)
         } catch(error){
           console.error('Error fetching data:', error);
         };
@@ -206,18 +215,10 @@ export default function Table (props:Props){
         };
       }
         fetchData();
-        // window.location.reload()
-        // const students = props.filteredweek.filter((item) => item._id !== weekId);
-        // props.setStudents(students)
     }
-    const handleEditGrade=(id:string)=>{
-      setId(id)
-      setEdit(!edit)
-    }
-    
-    
     
     const filteredSubject=props.students.subjects&&props.students.subjects.filter((subject:Subject)=>(subject.subject===props.subject))
+    
     const formatDate = (dateString:string) => {
       if(dateString){
         const date = new Date(dateString);
@@ -255,7 +256,7 @@ export default function Table (props:Props){
           <Tdborder >
            {loc.pathname==='/'&&user?.status==='მასწავლებელი'?
            <>
-           {props.students&&props.students.map((student)=>(
+           {props.students&&props.students.map((student:Student)=>(
            <Td style={{borderRight:'none'}}  key={student._id}>{student.privatenumber}</Td>
            ))        
            }  
@@ -280,7 +281,7 @@ export default function Table (props:Props){
            {/* saerto cxrili editiiiiiiiiiiiiii */}
            {loc.pathname==='/'&&user?.status==='მასწავლებელი'?
            <Tdborder>
-           {props.students&&props.students.map((student)=>(
+           {props.students&&props.students.map((student:Student)=>(
             
            <Td  key={student._id}>
                 {edit&&student._id===id?
@@ -295,7 +296,7 @@ export default function Table (props:Props){
             
             ))}
             </Tdborder>:''}
-            {loc.pathname==='/'&&user?.status==='მასწავლებელი'?props.students&&props.students.map((student)=>(
+            {loc.pathname==='/'&&user?.status==='მასწავლებელი'?props.students&&props.students.map((student:Student)=>(
             <>
             <Td   key={student._id}>
                 <DeleteIcon  onClick={()=>deleteStudent(student._id)}>
@@ -348,19 +349,13 @@ export default function Table (props:Props){
                 ))
             ))
            }
-
-                
             </Tdborder>
             <Tdborder >
            {filteredSubject&&filteredSubject.map((subject:Subject)=>(
               <Td   key={subject._id}>
-              <DeleteIcon   onClick={()=>deleteGrade(subject._id)}>
+              <GradeDeleteIcon   onClick={()=>deleteGrade(subject._id)}>
                <DeleteOutlineOutlinedIcon/>
-               </DeleteIcon>
-               {loc.pathname==='/'?
-               <EditIcon   onClick={()=>handleEditGrade(subject._id)}>
-               <ModeEditOutlineOutlinedIcon/>
-               </EditIcon>:''}
+               </GradeDeleteIcon>
               </Td>
             ))
            }

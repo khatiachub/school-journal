@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import  { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link,useNavigate } from 'react-router-dom';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
@@ -15,7 +13,9 @@ import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-// rgb(59 130 246 / .5)
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { userRequest } from './requestmethods';
+
 
 interface Props {
   state: boolean;
@@ -70,20 +70,13 @@ const Image=styled.img`
 `
 const School=styled.p`
  width:80px;
+ color:#262626;
  @media screen and (max-width:768px){
     display:none;
   }
   
 `
-const Notific=styled.div`
-   width:40px;
-   height:40px;
-   border-radius:8px;
-   background-color: #e6e0e0;
-   display:flex;
-   justify-content:center;
-   align-items:center;
-`
+
 const SchoolNumber=styled.p`
   font-size:14px;
   @media screen and (max-width:1024px){
@@ -93,17 +86,18 @@ const SchoolNumber=styled.p`
 `
 const UserBox=styled.div`
    display:flex;
-   justify-content:center;
+   justify-content:space-between;
    align-items:center;
+   width:560px;
 `
 const SchoolBox=styled.div`
    display:flex;
    justify-content:space-between;
    align-items:center;
-   border-right:5px solid #1930b3;
+   border-right:5px solid #6EB1D6;
    padding:10px;
-   height:30px;
-   width:350px;
+   height:20px;
+   width:290px;
    @media screen and (max-width:1024px){
     width:40px;
     border:none;
@@ -114,15 +108,21 @@ const UserWraper=styled.div`
   padding:10px;
   justify-content:space-between;
   align-items:center;
-  width:210px;
+  max-width:210px;
+  width:100%;
+  box-sizing:border-box;
   @media screen and (max-width:1024px){
-    width:50px;
+    width:70px;
+  }
+  @media screen and (max-width:485px){
+    width:60px;
+    padding:0px;
   }
 `
 const ProfileImage=styled.img`
   width:40px;
   height:40px;
-  object-fit:cover;
+  object-fit:contain;
   border-radius:10px;
 `
 const Accordeon=styled.div`
@@ -168,6 +168,7 @@ const NavbarMenu=styled.div`
 const NavSchoolNumber=styled.p`
   font-size:14px;
   color:#fff;
+  margin-top:5px;
 `
 const NavWraper=styled.div`
   width:90%;
@@ -241,6 +242,24 @@ const HeaderProfile=styled.div`
    border-radius:20px;
    padding:20px;
    z-index: 2000;
+   @media screen and (max-width:1024px){
+    width:100%;
+    left:0;
+    right:0;
+    height:100vh;
+    border:none;
+  }
+`
+const Close=styled.div`
+  position:absolute;
+  right:15px;
+  color:#ccc6c6;
+  top:10px;
+  @media screen and (max-width:1024px){
+    right:60px;
+    font-size:25px;
+    font-weight:bold;
+  }
 `
 const ProfileWraper=styled.div`
   margin-top:20px;
@@ -267,8 +286,10 @@ export default function Header() {
     setState(!state)    
   }
 const[arrow,setArrow]=useState(false)
+const ref = useRef<HTMLButtonElement | null>(null);
 const changeArrow=()=>{
   setArrow(!arrow)
+  ref.current?.click()
 }
 const{user,logout}=useUser()
 const nav=useNavigate();
@@ -277,10 +298,23 @@ const logOut=()=>{
   nav("/login")
   window.location.reload();
 }
-
+const[userImage,setUserImage]=useState('')
+useEffect(() => {
+  async function getData() {
+    try {
+      if (user) {  // Check if user is defined
+        const response = await userRequest.get(`/find/${user._id}`);
+        setUserImage(response.data.image);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+  getData();
+}, [user]); 
   return (
     <>
-    <HeaderBox state={state} onClick={handleClick}>
+    <HeaderBox>
       <Navbar state={state}>
        {state?
         <NavbarMenu>
@@ -313,50 +347,43 @@ const logOut=()=>{
           <CalendarTodayOutlinedIcon style={{color:'#fff'}}/>
           <Text>კალენდარი</Text>
         </Wraper>
-        {/* {user?.status==='მოსწავლე'?
-        <Wraper to={'/subjects'}>
-          <SubjectOutlinedIcon style={{color:'#fff'}}/>
-          <Text>საგნები</Text>
-        </Wraper>:''} */}
         <Wraper to={`/profile/${user?._id}`}>
           <AccountCircleOutlinedIcon style={{color:'#fff'}}/>
           <Text>პროფილი</Text>
         </Wraper>
         
       </Navbar>
-      {/* </HeaderBox> */}
-
-      <HeaderWraper state={state}>
+      <HeaderWraper >
         <FlexBox>
           <Burger onClick={handleClick}>
             <MenuOutlinedIcon/>
           </Burger>
-          <Link style={{display:'flex',textDecoration:'none',width:150,justifyContent:'space-between'}} to={'/'}>
-          <Image src={'https://onlineschool.emis.ge/assets/svg_icons/brand.svg'}/>
-          <School>ონლაინ სკოლა</School>
+          <Link style={{display:'flex',textDecoration:'none',width:160,justifyContent:'space-around',}} to={'/'}>
+          <Image  src={'https://onlineschool.emis.ge/assets/svg_icons/brand.svg'}/>
+          <School >ონლაინ სკოლა</School>
           </Link>
         </FlexBox>
         <UserBox>
           <SchoolBox>
-            <Notific>
-              <NotificationsNoneOutlinedIcon/>
-            </Notific>
             <SchoolNumber>სსიპ - ქალაქ თბილისის №55 საჯარო სკოლა</SchoolNumber>
           </SchoolBox>
           <UserWraper>
-            <ProfileImage  src='https://onlineschool.emis.ge/assets/images/pattern.png'/>
+            <ProfileImage onClick={changeArrow}  src={userImage?userImage:'https://onlineschool.emis.ge/assets/images/pattern.png'}/>
             <div style={{display:'flex',flexDirection:'column'}}>
             {user?.status==='მასწავლებელი'?
             <User style={{fontSize:12}}>მასწავლებელი</User>:
             <User>მოსწავლე</User>
-            
             }
             <Span >{user?.name}</Span>
             </div>
-            <Accordeon onClick={changeArrow}>
+            <Accordeon  onClick={changeArrow}>
               {arrow?<KeyboardArrowDownOutlinedIcon/>:<KeyboardArrowUpOutlinedIcon/>}
+            </Accordeon>
               {arrow?
               <HeaderProfile>
+                <Close onClick={changeArrow}>
+                <CloseOutlinedIcon/>
+                </Close>
                 <ProfileWraper>
                   <ProfileLink to={`/profile/${user?._id}`}>
                   <AccountBoxOutlinedIcon style={{color:"#bbb3b3"}}/>
@@ -376,7 +403,6 @@ const logOut=()=>{
                   </ProfileLink>
                   </ProfileWraper>
               </HeaderProfile>:''}
-            </Accordeon>
           </UserWraper>
         </UserBox>
       </HeaderWraper>

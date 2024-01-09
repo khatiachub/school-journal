@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState} from 'react'
+import { useEffect, useState} from 'react'
 import styled from 'styled-components'
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
@@ -6,28 +6,25 @@ import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import { useNavigate } from 'react-router-dom';
-import { publicRequest, userRequest } from '../components/requestmethods';
+import { userRequest } from '../components/requestmethods';
 import { MyCalendar } from '../components/Moment';
 import moment from 'moment';
-import { datetime, RRule, RRuleSet, rrulestr } from 'rrule'
+import { RRule} from 'rrule'
 import { useUser } from '../components/UserContext';
+import { Event as BigCalendarEvent } from 'react-big-calendar';
 
 
 const Container=styled.div`
     width:95%;
     margin:0 auto;
 `
-
-
-
-
 const SubjectModule=styled.div`
     max-width:500px;
     width:100%;
     height:230px;
     position:absolute;
     left:50%;
-    top:50%;
+    top:70%;
     transform:translate(-50%,-50%);
     background-color:#fff;
     border-radius:5px;
@@ -249,23 +246,30 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
           );
 
       
-      const [selectedEventId, setSelectedEventId] = useState(null);
-      const [selectedEventTitle, setSelectedEventTitle] = useState(null);
-      const[selectedDate,setSelectedDate]=useState(null)
-      const handleEventClick=(event)=>{
-        const eventId = event._id; // Assuming 'id' is the property containing the event ID
-        const eventTitle = event.title; // Assuming 'title' is the property containing the event title
+      const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+      const [selectedEventTitle, setSelectedEventTitle] = useState<React.ReactNode>(null);
+      const [selectedDate, setSelectedDate] = useState<Date | string>('');
+      interface CustomEvent extends BigCalendarEvent {
+        _id: string; 
+      } 
+      const handleEventClick=(event:CustomEvent)=>{
+        const eventId = event._id; 
+        const eventTitle = event.title;
         setSelectedEventId(eventId);
         setSelectedEventTitle(eventTitle);
-        setSelectedDate(event.start)        
+        if (event.start !== undefined) {
+          setSelectedDate(event.start);
+        } else {
+          setSelectedDate('');
+        }
       }
       const handleRemove=()=>{
         setSelectedEventId(null);
       }
-      const formatDate = (dateString:string) => {
+      const formatDate = (dateString:string|Date) => {
         if(dateString){
           const date = new Date(dateString);
-          const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
+          const options:Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
           return new Intl.DateTimeFormat('en-US',options).format(date);    
         }else{
           return
@@ -295,6 +299,7 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
         <Input  name='time' type='time' onChange={(e)=>handleChange(e)}/>
         <Input  name='date' type='date' onChange={(e)=>handleChange(e)}/>
         <Select name='subject' onChange={(e)=>handleChange(e)}>
+            <Option>საგანი</Option>
             <Option>ქართული</Option>
             <Option>მათემატიკა</Option>
             <Option>ფიზიკა</Option>
@@ -309,7 +314,6 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
         <Calendar>
             <MyCalendar myEventsList={weeklyEvents} handleEventClick={handleEventClick} />
       </Calendar>
-
       {selectedEventId?
         <SubjectModule >
           <RemoveButton onClick={handleRemove}>

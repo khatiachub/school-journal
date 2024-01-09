@@ -21,7 +21,6 @@ const Image = styled.div`
 const Input=styled.input`
   width:240px;
   height:50px;
-  outline:none;
   border:1px solid #3317ad;
   border-radius:36px;
   margin-top:10px;
@@ -127,10 +126,14 @@ const Text=styled.p`
   font-size:25px;
   line-height:2;
 `
+const ErrorMessages=styled.p`
+  margin-top:10px;
+  color:#e42525;
+`
 
 
 export default function Register() {
-  const { register, handleSubmit,watch,getValues, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit,watch, formState: { errors } } = useForm();
   const[success,setSuccess]=useState(false)
 
   const name=watch('name')
@@ -141,15 +144,35 @@ export default function Register() {
   const privatenumber=watch('privatenumber')
   const status=watch('status')
   
-  const Name=register("name",{required:true})
-  const Lastname=register("lastname",{required:true})
-  const Email=register("email",{required:true})
+  const Name=register("name",{ required: true, 
+    pattern:{
+      value:/^[A-Za-zა-ჰ]+$/i,
+      message:"შეიყვანეთ მხოლოდ სიმბოლოები"
+    }})
+  const Lastname=register("lastname",{ required: true, 
+    pattern:{
+      value:/^[A-Za-zა-ჰ]+$/i,
+      message:"შეიიყვანეთ მხოლოდ სიმბოლოები"
+    }})
+  const Email=register("email",{required: true,
+    pattern: {
+      value: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/,
+      message: "არასწორი იმეილის ფორმატი",
+  }})
   const Privatenumber=register("privatenumber",{required:true})
   const Password=register("password",{required:true})
   const Confirmpassword=register("confirmpassword",{required:true})
   const Status=register("status",{required:true})
   
+  
+  
+ 
+
+
   const handleClick=()=>{
+    if(password!==confirmpassword){
+      return
+    }else{
     const formData = new FormData();
     formData.append('name', name);
     formData.append('lastname', lastname);
@@ -167,7 +190,8 @@ export default function Register() {
           console.log(err);
         }
       };
-      registerUser();       
+      registerUser(); 
+    }      
   }
   const nav=useNavigate();
   useEffect(()=>{
@@ -188,50 +212,69 @@ export default function Register() {
        <div style={{width:"240px",marginTop:25,paddingRight:10}}>
         <Label>სახელი</Label>
         <Input {...Name} 
-        name='name' type='text'/>
+        name='name' type='text'
+        style={{border:`${errors.name||name===''?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.name||name===''?'red':'green'}`}}
+        />
+        {(errors.name||name==='')&&<ErrorMessages>ველის შევსება სავალდებულოა, მხოლოდ სიმბოლოები</ErrorMessages>}
         </div>
        <div style={{width:"240px",marginTop:25}}>
        <Label>გვარი</Label>
         <Input {...Lastname} 
-        name='lastname'  type='text'/>
+        name='lastname'  type='text'
+        style={{border:`${errors.lastname||lastname===''?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.lastname||lastname===''?'red':'green'}`}}
+        />
+        {(errors.lastname||lastname==='')&&<ErrorMessages>ველის შევსება სავალდებულოა, მხოლოდ სიმბოლოები</ErrorMessages>}
        </div>
        </InputWraper>
        <InputWraper>     
           <div style={{width:"240px",marginTop:25,paddingRight:10}}>
           <Label>მეილი</Label>
           <Input {...Email} 
+          style={{border:`${errors.email||email===''?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.email||email===''?'red':'green'}`}}
           name='email' type='email'/>
+          {(errors.email||email==='')&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
           </div>
           <div style={{width:"240px",marginTop:25}}>
           <Label >პირადი ნომერი</Label>
           <Input {...Privatenumber} 
+          style={{border:`${errors.privatenumber||privatenumber===''?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.privatenumber||privatenumber===''?'red':'green'}`}}
           name='privatenumber' type='number'/>
+          {(errors.privatenumber||privatenumber==='')&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
           </div>
           </InputWraper>   
           <InputWraper>
           <div style={{width:"240px",marginTop:25,paddingRight:10}}>
           <Label>პაროლი</Label>
           <Input {...Password} 
+          style={{border:`${errors.password||password===''?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.password||password===''?'red':'green'}`}}
           name='password' type='password'/>
+          {(errors.password||password==='')&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
           </div>
           <div style={{width:"240px",marginTop:25}}>
           <Label>გაიმეორეთ პაროლი</Label>
           <Input {...Confirmpassword} 
+          style={{border:`${errors.confirmpassword||confirmpassword===''||(confirmpassword!==''||password!==confirmpassword)?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.confirmpassword||confirmpassword===''||(confirmpassword!==''&&password!==confirmpassword)?'red':'green'}`}}
           name='confirmpassword' type='password'/>
+          {(errors.confirmpassword||confirmpassword==='')&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
+          {(password!==confirmpassword&&confirmpassword!=='')&&<ErrorMessages>პაროლები არ ემთხვევა</ErrorMessages>}
+
           </div>
           </InputWraper>          
        <div style={{display:'flex',justifyContent:'start'}}>
          <RadioWraper>
             <Label>მასწავლებელი</Label>
             <Radio {...Status} 
+            style={{border:`${errors.status||status===''?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.status||status===''?'red':'green'}`}}
             name='status' value='მასწავლებელი' type='radio'/>
         </RadioWraper>
         <RadioWraper style={{marginLeft:10}}>
             <Label>მოსწავლე</Label>
             <Radio {...Status} 
+            style={{border:`${errors.status||status===''?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.status||status===''?'red':'green'}`}}
             name='status' value='მოსწავლე' type='radio'/>
         </RadioWraper>
        </div>
+       {(errors.status||status==='')&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
 
         <Button  type='submit'>შესვლა</Button>
       </Form>

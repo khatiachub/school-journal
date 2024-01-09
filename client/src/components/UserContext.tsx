@@ -17,7 +17,7 @@ interface User {
   image:string;
 }
 interface UserContextType {
-  user: User | null;
+  user: User |null;
   login: (userData: User) => void;
   logout: () => void;
   studentGrade: (grade: any) => void; 
@@ -27,7 +27,7 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User|null>(null);
   const[studentGrades,setStudentGrades]=useState({})
   const[token,setToken]=useState('')
 

@@ -112,15 +112,16 @@ const Label=styled.label`
   font-size:15px;
   margin-top:10px;
 `
-
-
+interface ArrayStudents{
+  Students:Students[]
+}
 interface Students{
   name:string;
   privatenumber:number;
   _id:string;
-  subjects:Subjects[]
+  subjects:Subject[]
 }
-interface Subjects{
+interface Subject{
   subject:string;
   grades:Grades[];
   _id:string;
@@ -131,8 +132,12 @@ interface Grades{
   grade: number;
   _id:string;
 }
+interface StateJournal{
+  name:string;
+  privatenumber:string;
+}
 export default function Journal() {
-const[students,setStudents]=useState<Students[]>([])
+const[students,setStudents]=useState<ArrayStudents[]>([])
 const {user}=useUser()
     useEffect(()=>{
         async function fetchData(){
@@ -149,7 +154,9 @@ const {user}=useUser()
             fetchData();
       },[user])
 
-  const[state,setState]=useState(
+      console.log(students);
+      
+  const[state,setState]=useState<StateJournal>(
     {
     name:'',
     privatenumber:''
@@ -169,10 +176,7 @@ const {user}=useUser()
     }
       fetchData();
       setState({...state,name:'',privatenumber:''});
-
   }
-  
-
   return (
     <>
     {user?.status==='მასწავლებელი'?
@@ -180,11 +184,11 @@ const {user}=useUser()
     <Wraper>
       <Subjectwraper >
       <Label>მოსწავლის პირადი ნომერი</Label>
-      <Input value={state.privatenumber} name='privatenumber' onChange={(e)=>handleFilter(e)} type='number' placeholder='private number'/>
+      <Input value={state.privatenumber} name='privatenumber' onChange={(e)=>handleFilter(e)} type='number' placeholder='პირადი ნომერი'/>
       </Subjectwraper>
     <SelectWraper >
       <Label>მოსწავლის სახელი</Label>
-      <Input value={state.name} name='name' onChange={(e)=>handleFilter(e)} type="text" placeholder='Student'/>
+      <Input value={state.name} name='name' onChange={(e)=>handleFilter(e)} type="text" placeholder='მოსწავლე'/>
       <Button onClick={addStudent}>Add student</Button>
     </SelectWraper>
     </Wraper>

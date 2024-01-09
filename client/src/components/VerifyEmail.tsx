@@ -1,6 +1,6 @@
 // import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link,  useNavigate, useParams } from 'react-router-dom'
+import  { useEffect, useState } from 'react'
+import {  useNavigate, useParams } from 'react-router-dom'
 import { userRequest } from './requestmethods'
 import styled from 'styled-components'
 import { useUser } from './UserContext'
@@ -52,7 +52,7 @@ export default function VerifyEmail() {
         const VerifyEmailUrl=async()=>{
             try{
                 const url=`/${params.id}/verify/${params.token}`
-                const{data}=await userRequest.get(url)
+                await userRequest.get(url)
                 setSuccess(true)
             }catch(error){
                  console.log(error);

@@ -1,4 +1,4 @@
-import { Calendar, momentLocalizer} from 'react-big-calendar'
+import { Calendar, momentLocalizer,View} from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import styled from 'styled-components'
@@ -67,6 +67,14 @@ const CalendarStyle = styled(Calendar)`
     text-align:center;
     padding:5px;
   }
+  .rbc-time-view .rbc-event{
+    @media screen and (max-width:1115px) {
+      /* justify-content:start; */
+      height:auto;
+      font-size:12px;
+      align-items:start;
+    }
+  }
   .day-view-header {
     background-color: #3498db; /* Set your desired background color */
     color: #fff; /* Set text color to make it readable */
@@ -133,7 +141,10 @@ const Wraper=styled.div`
     border-radius:10px;
     /* margin-top:20px; */
 `
-const Button=styled.button`
+interface ButtonProps {
+  active?: boolean;
+};
+const Button=styled.button<ButtonProps>`
     color: #262626;
     cursor: pointer;
     padding:10px;
@@ -196,14 +207,13 @@ const Container=styled.div`
 
 
 interface MyCalendarProps {
-  myEventsList: any[]; // Adjust the type based on the actual type of your events
-  handleEventClick: (event: any, e: React.SyntheticEvent) => void; // Corrected type
-  // eventStyleGetter?: (event: any, start: string, end: string, isSelected: boolean) => React.CSSProperties;
+  myEventsList: any[]; 
+  handleEventClick: (event: any, e: React.SyntheticEvent) => void; 
 }
 
 export const MyCalendar:React.FC<MyCalendarProps> = (props) => {
   
-  const [view, setView] = useState('month');
+  const [view, setView] = useState<View>('month');
   const[desktop,setDesktop]=useState(false)
 
   useEffect(() => {
@@ -277,7 +287,7 @@ const CustomToolbar: React.FC<any> = (toolbarProps) => {
   });
   
   const [activeView, setActiveView] = useState('month');
-  const handleButtonClick = (view) => {
+  const handleButtonClick = (view:string) => {
     setActiveView(view);
     toolbarProps.onView(view);
   };

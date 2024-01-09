@@ -1,7 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { userRequest } from '../components/requestmethods'
 import { useNavigate, useParams } from 'react-router-dom'
 
 
@@ -36,7 +35,7 @@ export default function RecoverPassword() {
         password:'',
         confirmpassword:''
     })
-    const handleChange=(e)=>{
+    const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
         setValues({...value,[e.target.name]:e.target.value})
     }
     const params=useParams()
@@ -48,7 +47,7 @@ export default function RecoverPassword() {
     const handleClick=()=>{
         const recover= async () => {
             try {
-              const res = await axios({
+                await axios({
                 method: 'put',
                 url: `http://localhost:5002/${id}`,
                 data: value,

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { publicRequest } from '../components/requestmethods';
 import { useUser } from '../components/UserContext';
-import { SyntheticEvent, useEffect } from 'react'; // Import the SyntheticEvent type
 
 
 const Image = styled.div`
@@ -22,7 +21,6 @@ const Image = styled.div`
 const Input=styled.input`
   width:300px;
   height:50px;
-  outline:none;
   border:1px solid #3317ad;
   border-radius:36px;
   margin-top:30px;
@@ -72,13 +70,21 @@ const TitleLink=styled(Link)`
    color:#fff;
    margin-top:20px;
 `
+const ErrorMessages=styled.p`
+  margin-top:10px;
+  color:#e42525;
+`
 export default function Login() {
-  const { register, handleSubmit,watch,getValues, reset, formState: { errors } } = useForm();
-  const{login,user}=useUser()
+  const { register, handleSubmit,watch, formState: { errors } } = useForm();
+  const{login}=useUser()
   const email=watch("email") as string
   const password=watch("password") as string
   
-  const Email=register('email',{required:true})
+  const Email=register("email",{required: true,
+    pattern: {
+      value: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/,
+      message: "არასწორი იმეილის ფორმატი",
+  }})
   const Password=register('password',{required:true})
   interface LoginFormValues {
     email: string;
@@ -101,16 +107,27 @@ export default function Login() {
     loginUser({email,password});
     
   }
-
-
-  
   return (
     <Container>
       <FormWraper>
       <Title>შესვლა</Title>
       <Form onSubmit={handleSubmit(handleClick)}>
-        <Input {...Email} name='email' type='email' placeholder='email'/>
-        <Input {...Password} name='password' type='password' placeholder='password'/>
+        <Input 
+        {...Email} 
+        name='email' 
+        type='email' 
+        placeholder='email'
+        style={{border:`${errors.email?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.email?'red':'green'}`}}
+        />
+        {(errors.email)&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
+        <Input 
+        {...Password} 
+        name='password' 
+        type='password' 
+        placeholder='password'
+        style={{border:`${errors.password?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.password?'red':'green'}`}}
+        />
+        {(errors.password)&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
         <Button type='submit'>შესვლა</Button>
       </Form>
       <TitleLink to={'/recoverpassword'}>პაროლის აღდგენა</TitleLink>

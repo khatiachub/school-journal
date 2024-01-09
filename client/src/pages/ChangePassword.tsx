@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { userRequest } from '../components/requestmethods'
 import { useUser } from '../components/UserContext'
 import { useNavigate } from 'react-router-dom'
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 
 const Container=styled.div`
@@ -25,6 +27,7 @@ const Input=styled.input`
     outline:none;
     border:none;
     margin-top:30px;
+    position: relative;
 `
 const Button=styled.button`
     margin-top:20px;
@@ -59,6 +62,15 @@ const Text=styled.p`
   text-align:center;
   color:#fff;
 `
+const Visibility=styled.div`
+  position:absolute;
+  right:10px;
+  top:47px;
+`
+const InputWraper=styled.div`
+  position: relative;
+`
+
 export default function ChangePassword() {
     const[userpassword,setUser]=useState({
         password:'',
@@ -80,7 +92,7 @@ export default function ChangePassword() {
           }
             fetchData();
     }
-    const handleChange=(e)=>{
+    const handleChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
         setUser({...userpassword,[e.target.name]:e.target.value})
     }
     const nav=useNavigate()
@@ -92,14 +104,50 @@ export default function ChangePassword() {
             return () => clearTimeout(timeoutId);
           }
     },[success])
+    const[current,setCurrent]=useState(false)
+    const[newPass,setNewPass]=useState(false)
+    const[confirm,setConfirm]=useState(false)
+    const handleVisible=(name:string)=>{
+      if(name==='password'){
+        setCurrent(!current)
+      }else if(name==='new'){
+        setNewPass(!newPass)
+      }else{
+        setConfirm(!confirm)
+      }
+    }
   return (
     <Container>
         <Label>შეიყვანეთ ამჟამინდელი პაროლი</Label>
-        <Input name='password' onChange={(e)=>handleChange(e)}/>
+        <InputWraper>
+        <Input name='password' onChange={(e)=>handleChange(e)}  type={`${current?'text':'password'}`}/>
+        <Visibility onClick={()=>handleVisible('password')}>
+          {current?
+          <RemoveRedEyeOutlinedIcon/>
+            :<VisibilityOffOutlinedIcon/>
+          }
+        </Visibility>
+        </InputWraper>
         <Label>შეიყვანეთ ახალი პაროლი</Label>
-        <Input name='newPassword' onChange={(e)=>handleChange(e)}/>
+        <InputWraper>
+        <Input name='newPassword' onChange={(e)=>handleChange(e)} type={`${newPass?'text':'password'}`}/>
+        <Visibility onClick={()=>handleVisible('new')}>
+          {newPass?
+          <RemoveRedEyeOutlinedIcon/>
+            :<VisibilityOffOutlinedIcon/>
+          }
+        </Visibility>
+        </InputWraper>
         <Label>გაიმეორეთ ახალი პაროლი</Label>
-        <Input name='confirmNewpassword' onChange={(e)=>handleChange(e)}/>
+        <InputWraper>
+        <Input name='confirmNewpassword' onChange={(e)=>handleChange(e)} type={`${confirm?'text':'password'}`}/>
+        <Visibility onClick={()=>handleVisible('confirm')}>
+          {confirm?
+          <RemoveRedEyeOutlinedIcon/>
+            :<VisibilityOffOutlinedIcon/>
+          }
+        </Visibility>
+        </InputWraper>
         <Button onClick={handleClick}>შეცვლა</Button>
         {success?
         <Wraper>

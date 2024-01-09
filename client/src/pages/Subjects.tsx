@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { subjects } from '../components/data'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import styled from 'styled-components'
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
-import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import { useUser } from '../components/UserContext';
-import { publicRequest, userRequest } from '../components/requestmethods';
+import { userRequest } from '../components/requestmethods';
 
 
-const SubjectBox=styled.div`
-   width:350px;
-   height:170px;
+const SubjectBox=styled(Link)`
+   max-width:350px;
+   width:100%;
+   height:160px;
    margin-top:30px;
    border-radius:10px;
-   padding:20px;
+   padding:30px 20px 30px 20px;
    margin-left:10px;
+   text-decoration:none;
+   @media screen and (max-width:400px) {
+    max-width:270px;
+    height:auto;
+   }
    &:nth-child(1){
     background-color:#3190C5;
    }
@@ -33,7 +38,7 @@ const SubjectBox=styled.div`
     background-color:#697FBD;
    }
    &:nth-child(8){
-    background-color:#697FBD;
+    background-color:#0160C9;
    }
 
    @media screen and (max-width:1400px) {
@@ -42,11 +47,9 @@ const SubjectBox=styled.div`
   @media screen and (max-width:1318px) {
     width:400px;
   }
-  @media screen and (max-width:1081px) {
-    width:300px;
-  }
-  @media screen and (max-width:886px) {
-    width:550px;
+  @media screen and (max-width:960px) {
+    max-width:550px;
+    width:100%;
   }
 `
 const SubjectsDiv=styled.div`
@@ -55,11 +58,11 @@ const SubjectsDiv=styled.div`
   width:90.8%;
   flex-wrap:wrap;
   box-sizing:border-box;
-  margin-top:10vh;
+  margin-top:13vh;
   @media screen and (max-width:1200px) {
     width:85%;
   }
-  @media screen and (max-width:886px) {
+  @media screen and (max-width:960px) {
     width:100%;
     justify-content:center;
     padding:10px;
@@ -87,7 +90,7 @@ const Container=styled.div`
   @media screen and (max-width:1065px) {
     padding-right:15px;
   }
-  @media screen and (max-width:886px) {
+  @media screen and (max-width:960px) {
     padding-right:0px;
   }
 `
@@ -96,15 +99,26 @@ const LinkSubject=styled.div`
   color:#fff;
   font-size:22px;
 `
-const Text=styled.p`
+const Text=styled.div`
   color:#fff;
   font-size:14px;
-  width:80px;
+  display:flex;
+  align-items:end;
+  justify-content:center;
+  height:auto;
+`
+const Span=styled.span`
+  margin-left:5px;
+  @media screen and (max-width:400px) {
+    max-width:80px;
+    width:100%;
+  }
 `
 const GradeWraper=styled.div`
   display:flex;
   justify-content:space-between;
-  width:90%;
+  width:99%;
+  margin-top:20px;
 `
 const SubjectWrap=styled.div`
   display:flex;
@@ -119,59 +133,45 @@ const Arrow=styled.div`
   align-items:center;
   color:#fff;
   padding:5px;
-  background-color:#bbb2b2;
+  background-color:#e9e6e6;
 `
 const Teacher=styled.div`
-  width:90%;
+  width:96%;
   border:1px solid #fff;
   border-radius:10px;
   margin-top:15px;
-  padding:15px;
+  padding:15px 5px 15px 5px;
+  display:flex;
+  flex-direction:column;
+  justify-content:start;
+  align-items:start;
 `
-const TeacherWraper=styled.div`
-  width:100%;
-  height:50px;
-  background-color:#e0dada;
-  border-radius:10px;
-  margin-top:40px;
-  padding:20px;
-  color:#fff;
-`
-const BackArrow=styled.div`
-    width:100%;
-    margin:0 auto;
-    height:50px;
-    background-color: #fdfbfb;
-    margin-top:30px;
-    color:#494747;
-    border-radius:10px;
-    display:flex;
-    align-items:center;
-    padding-left:10px;
-    box-sizing:border-box;
-`
+interface Students{
+  name:string;
+  privatenumber:number|undefined;
+  _id:string;
+  subjects:Subjects[]
+}
+interface Subjects{
+  subject:string;
+  grades:Grades[];
+  _id:string;
+}
+interface Grades{
+  date: string;
+  attendance: boolean;
+  grade: number;
+  _id:string;
+}
 
 export default function Subjects() {
-  
-  const getRandomColor = () => {
-    let color;
-    do {
-      color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-    } while (color === '#ffffff'); // Keep generating until a non-white color is obtained
-    return color;
-  };
-    const nav=useNavigate()
-    const handleClick=()=>{
-        nav('/')
-    }
-    const[id,setId]=useState([])
+  const[id,setId]=useState([])
   const{user}=useUser()
-  console.log(user);
   
   useEffect(()=>{
     async function fetchData(){
         try{
-        const response=await userRequest.get('/grade')
+        const response=await userRequest.get('/student/grade')
         setId(response.data);  
                   
         } catch(error){
@@ -180,47 +180,77 @@ export default function Subjects() {
       }
         fetchData();
   },[])
-
-    const filteredId=id.filter((id:Student)=>(id.privatenumber==user?.privatenumber))
-  const filteredSubject=filteredId&&filteredId.map((id)=>(id.subjects.filter((subject)=>(subject.subject===params.sub))))
-  console.log(filteredSubject);
   
+    const filteredId=id.filter((id:Students)=>(id.privatenumber==user?.privatenumber))
+    const filtered=filteredId&&filteredId.map((subject:Students)=>(subject.subjects)).flat()
+
   return (
     <Container >
       <ContentDiv></ContentDiv>
     <SubjectsDiv>
-      {/* <TeacherWraper> */}
-      {/* <BackArrow onClick={handleClick}>
-            <ArrowBackIosOutlinedIcon/>
-            დამრიგებელი:
-      </BackArrow> */}
-      {/* </TeacherWraper> */}
-      {subjects.map((subject,i)=>(
-        <SubjectBox key={i} >
-          <SubjectWrap>
-            <LinkSubject >{subject.subject}</LinkSubject>
-            <Link to={`/subjects/${subject.subject}`}>
-            <Arrow >
-            <ArrowForwardIosOutlinedIcon/>
-            </Arrow>
-            </Link>
-          </SubjectWrap>
-            <Teacher>
-            <Text>მასწავლებელი:</Text>
-            </Teacher>
-            <GradeWraper>
-            <Text>მიმდინარე სემესტრის შეფასება:
-            {filteredSubject&&filteredSubject.map((subject)=>(subject.map((subject:Subject)=>(subject.grades.map((grade)=>(
-               <div>
-               <p>{grade.grade}9</p>
-               </div>
-            ))))))}
-            </Text>
-            <Text>დასწრება:</Text>
-            <Text>წლიური შეფასება:</Text>
-            </GradeWraper>
-        </SubjectBox>
-      ))}
+{subjects.map((subject, i) => {
+  const filteredSubject = filtered && filtered.filter((subj:Subjects) => subj.subject === subject.subject);
+  //jamuri qula
+  const totalGrade =
+    filteredSubject &&
+    filteredSubject
+      .map((subj:Subjects) => subj.grades.map((grade) => grade.grade))
+      .flat()
+      .reduce((acc:number, current:number) => acc + current, 0);
+//qulebis raodenoba
+  const numberOfGrades =
+    filteredSubject &&
+    filteredSubject
+      .map((subj:Subjects) => subj.grades.filter((grade) => grade.grade !== null))
+      .flat()
+      .length;
+
+  const averageGrade = numberOfGrades !== 0 ? totalGrade / numberOfGrades : 0;
+//mindinare qula
+  const current =
+    filteredSubject &&
+    filteredSubject
+      .map((subj:Subjects) => subj.grades.filter((grade) => grade.grade !== null))
+      .flat()
+      .map((grade:Grades) => grade.grade)
+      .join(", ");
+
+  // Daswreba
+  const attend =
+    filteredSubject &&
+    filteredSubject.map((subj:Subjects) => subj.grades.filter((grade) => grade.attendance === true)).flat().length;
+
+  const arraylength = filteredSubject && filteredSubject.map((subj:Subjects) => subj).length;
+
+  const filteredAttend = (attend / arraylength) * 100;
+
+  return (
+    <SubjectBox key={i} to={`/subjects/${subject.subject}`}>
+    <SubjectWrap>
+      <LinkSubject>{subject.subject}</LinkSubject>
+        <Arrow>
+          <ArrowForwardIosOutlinedIcon />
+        </Arrow>
+    </SubjectWrap>
+    <Teacher>
+      <Text >
+        <Span>მიმდინარე სემესტრის შეფასება:</Span>
+        <Span style={{wordBreak:'break-all'}}>{current}</Span>
+      </Text>
+      <GradeWraper>
+      <Text>
+       <Span> დასწრება:</Span>
+       <Span> {filteredAttend?filteredAttend.toFixed(2):''}%</Span>
+      </Text>
+      <Text>
+        <Span>წლიური შეფასება:</Span>
+        <Span>{averageGrade?averageGrade:''}</Span>
+      </Text>
+      </GradeWraper>
+    </Teacher>
+  </SubjectBox>
+  );
+})}
     </SubjectsDiv>
     </Container>
   )

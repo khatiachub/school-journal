@@ -11,6 +11,7 @@ const UserSchema=new mongoose.Schema(
         password:{type:String,required:true},
         confirmpassword:{type:String,required:true},
         verified:{type:Boolean,default:false},
+        image:{type:String}
     },
     {timestamps:true}
 )

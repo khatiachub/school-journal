@@ -2,7 +2,7 @@ import { Outlet, useLocation, useNavigate ,Navigate} from 'react-router-dom'
 import Header from './Header'
 import styled from 'styled-components';
 import { useUser } from './UserContext';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 
 
@@ -10,7 +10,7 @@ const Wraper=styled.div`
 `
 
 export default function Root() {
-  const{user,logout}=useUser()
+  const{logout}=useUser()
   const loc=useLocation()
   const useAuth=()=>{
     const user=localStorage.getItem('user')
@@ -22,7 +22,13 @@ export default function Root() {
   }
   const auth=useAuth();
   const nav=useNavigate()
-
+useEffect(()=>{
+  const user=localStorage.getItem('user')
+   if(!user){
+    logout()
+    nav('/login')
+   }
+},[])
 
   
   return(

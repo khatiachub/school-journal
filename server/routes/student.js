@@ -53,7 +53,7 @@ router.put("/student/:id/grade/:subjectId", verifyTokenAndTeacher, async (req, r
 
 
 //qulis washla
-router.delete("/student/:id/grade/:subjectId", async (req, res) => {
+router.delete("/student/:id/grade/:subjectId",verifyTokenAndTeacher, async (req, res) => {
   const { id,subjectId } = req.params;
   try {
     const student = await Grade.findById(id);

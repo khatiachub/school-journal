@@ -75,9 +75,6 @@ const Input=styled.input`
     }
 
 `
-const Title=styled.h3`
-    
-`
 const GradeDiv=styled.div`
     max-width:950px;
     width:100%;
@@ -195,28 +192,18 @@ interface Grades{
   grade: number;
   _id:string;
 }
-const initialGrades: Grades = {
-  date: '',
-  attendance: false,
-  grade: 0,
-  _id: '',
-};
 
-const initialSubject: Subjects = {
-  subject: '',
-  grades: [initialGrades],
-  _id: '',
-};
-
-const initialStudent: Students = {
-  name: '',
-  privatenumber: 0,
-  _id: '',
-  subjects: [initialSubject],
-};
+interface State{
+  grade:number|null;
+  subject:string;
+  attendance:boolean|string;
+  date:string
+}
 
 export default function Studentroom() {
-    const[students,setStudents]=useState<Students>(initialStudent)
+    const[students,setStudents]=useState<Students>({} as Students)
+    console.log(students);
+    
     const params = useParams<{ id:string}>();
     const{id}=params
     const{studentGrade}=useUser()
@@ -225,30 +212,25 @@ export default function Studentroom() {
             try{
             const response=await userRequest.get(`/student/${id}/grade`)
             setStudents(response.data);  
-            studentGrade(response.data) 
+            studentGrade(response.data)             
             } catch(error){
               console.error('Error fetching data:', error);
             };
           }
             fetchData();
-      },[])
-        
-
-  console.log(students);
-  
-  const[state,setState]=useState({
+            
+      },[])  
+      console.log(students);
+      
+  const[state,setState]=useState<State>({
       grade:null,
       subject:'',
       date:'',
       attendance:''
     })
-    
-
   const handleFilter=(e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>)=>(
       setState({...state,[e.target.name]:e.target.value})
     )
-
-
   const newData = {
     subjects:[
       {
@@ -268,28 +250,14 @@ const addGrade=()=>{
     try{
     const response=await userRequest.post(`/student/${id}/grade`,newData)
     setStudents(response.data);  
+    window.location.reload()
+
     } catch(error){
       console.error('Error fetching data:', error);
     };
   }
     fetchData();
 }
-
-
-
-const editGrade=(id:string)=>{
-  async function fetchData(){
-    try{
-    const response=await userRequest.put(`/student/${params.id}/grade/${id}`,state)
-    console.log(response.data);
-    } catch(error){
-      console.error('Error fetching data:', error);      
-    };
-  }
-    fetchData();
-    window.location.reload()
-}
-   
   return (
       <Container >
         <Name>მოსწავლე: <Span>{students?.name}</Span></Name>
@@ -325,7 +293,6 @@ const editGrade=(id:string)=>{
       students={students}
       name={students.name}
       subject={state.subject}
-      editGrade={editGrade}
       state={state}
       setState={setState}
      />

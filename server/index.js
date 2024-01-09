@@ -22,9 +22,18 @@ mongoose
     console.log(err);
   });
 
+  app.use(bodyParser.json({limit: '50mb'}));
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: '50mb',
+    parameterLimit: 50000,
+  }),
+);
+
   app.use("/", studentRoute);
   app.use("/", userRoute);
-
 
   app.get('/', (req, res) => {
     res.status(200).send("get request")

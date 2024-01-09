@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { publicRequest } from '../components/requestmethods'
@@ -34,8 +33,8 @@ const Label=styled.label`
    color:#fff;
 `
 export default function UpdatePassword() {
-    const[email,setEmail]=useState()
-    const handleChange=(e)=>{
+    const[email,setEmail]=useState<string>()
+    const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
         setEmail(e.target.value)
     }
     const handleClick=()=>{
