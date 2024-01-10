@@ -36,11 +36,11 @@ function App() {
     <GlobalStyle />
     <Router>
     <Routes>
-       {/* <Route path='/login' element={<Login/>}/>
+       <Route path='/login' element={<Login/>}/>
        <Route path='/register' element={<Register/>}/>
        <Route path='/:id/verify/:token'  element={<VerifyEmail/>}/>
        <Route path='/recoverpassword/:id/:token'  element={<RecoverPassword/>}/>
-       <Route path='/recoverpassword'  element={<UpdatePassword/>}/> */}
+       <Route path='/recoverpassword'  element={<UpdatePassword/>}/>
 
        <Route path='/' element={<Root/>}>
        <Route index element={<Journal/>}/>
@@ -51,13 +51,6 @@ function App() {
        <Route path='/profile/:id' element={<Profile/>}/>
        {/* <Route path='/studentslist'  element={<Journal/>}/> */}
        <Route path='/parameters/changepassword'  element={<ChangePassword/>}/>
-
-       <Route path='/login' element={<Login/>}/>
-       <Route path='/register' element={<Register/>}/>
-       <Route path='/:id/verify/:token'  element={<VerifyEmail/>}/>
-       <Route path='/recoverpassword/:id/:token'  element={<RecoverPassword/>}/>
-       <Route path='/recoverpassword'  element={<UpdatePassword/>}/>
-
        </Route>
     </Routes>
     </Router>    
