@@ -1,10 +1,10 @@
 import  { useState } from 'react'
 import styled from 'styled-components'
 import {  useLocation } from 'react-router-dom'
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import arrowdown from '../images/chevron-down.svg'
+import arrowup from '../images/chevron-up (1).svg'
+import trash from '../images/trash (1).svg'
+import editIcon from '../images/edit.svg'
 
 
 const Accordbox=styled.div`
@@ -111,10 +111,10 @@ const Accordeon:React.FC<AccordeonProps> =(props)=> {
                         </div>
                        <div style={{display:'flex',width:55,justifyContent:'space-between'}}>
                           <DeleteIcon>
-                             <DeleteOutlineOutlinedIcon/>
+                             <img src={trash}/>
                           </DeleteIcon>
                           <EditIcon>
-                             <ModeEditOutlineOutlinedIcon/>
+                            <img src={editIcon}/>
                           </EditIcon>
                        </div>
                     </div>:
@@ -131,10 +131,10 @@ const Accordeon:React.FC<AccordeonProps> =(props)=> {
                         </div>
                         <div style={{display:'flex',width:55,justifyContent:'space-between'}}>
                           <DeleteIcon>
-                             <DeleteOutlineOutlinedIcon/>
+                          <img src={trash}/>
                           </DeleteIcon>
                           <EditIcon>
-                             <ModeEditOutlineOutlinedIcon/>
+                          <img src={editIcon}/>
                           </EditIcon>
                        </div>
                    </div>:
@@ -144,12 +144,12 @@ const Accordeon:React.FC<AccordeonProps> =(props)=> {
                   </div>}
                   </Gradediv>
                   <Arrowdown onClick={()=>handleClick(date._id)}>
-                   <KeyboardArrowDownOutlinedIcon/>
+                  <img src={arrowdown}/>
                  </Arrowdown>
                   </>
                 :
                 <Arrowup  onClick={()=>handleClick(date._id)}>
-                   <KeyboardArrowUpOutlinedIcon/>
+                <img src={arrowup}/>
                 </Arrowup>
                 }
                 </Accordbox>            

@@ -1,20 +1,20 @@
 import  { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import menu from '../images/menu (1).svg'
 import { Link,useNavigate } from 'react-router-dom';
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useUser } from './UserContext';
-import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
-import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { userRequest } from './requestmethods';
 import emis from '../images/emiss.svg'
+import logoutIcon from '../images/log-out.svg'
+import home from '../images/home.svg'
+import userIcon from '../images/user.svg'
+import loginIcon from '../images/log-in (1).svg'
+import calendar from '../images/calendar.svg'
+import arrowdown from '../images/arrow-down.svg'
+import arrowup from '../images/arrow-up.svg'
+import settings from '../images/settings.svg'
+import closeIcon from '../images/x (1).svg'
+import userIcon2 from '../images/user (2).svg'
 
 interface Props {
   state: boolean;
@@ -327,27 +327,27 @@ useEffect(() => {
         </NavbarMenu>
         :''}
          <Wraper to={`/`}>
-         <HomeOutlinedIcon style={{color:'#fff'}}/>
+         <img src={home}/>
          <Text>მთავარი</Text>
        </Wraper>
         <Wraper to={'/register'}>
-          <PersonOutlineOutlinedIcon style={{color:'#fff'}}/>
+          <img src={userIcon}/>
           <Text>რეგისტრაცია</Text>
         </Wraper>
         {!user?
         <>
         <Wraper to={'/login'}>
-          <LoginOutlinedIcon style={{color:'#fff'}}/>
+        <img src={loginIcon}/>
           <Text>შესვლა</Text>
         </Wraper>
         </>
         :''}
         <Wraper to={'/calendar'}>
-          <CalendarTodayOutlinedIcon style={{color:'#fff'}}/>
+        <img src={calendar}/>
           <Text>კალენდარი</Text>
         </Wraper>
         <Wraper to={`/profile/${user?._id}`}>
-          <AccountCircleOutlinedIcon style={{color:'#fff'}}/>
+        <img src={userIcon}/>
           <Text>პროფილი</Text>
         </Wraper>
         
@@ -355,7 +355,7 @@ useEffect(() => {
       <HeaderWraper >
         <FlexBox>
           <Burger onClick={handleClick}>
-            <MenuOutlinedIcon/>
+            <img src={menu}/>
           </Burger>
           <Link style={{display:'flex',textDecoration:'none',width:160,justifyContent:'space-around',marginTop:25}} to={'/'}>
           <Image  src={emis}/>
@@ -376,28 +376,30 @@ useEffect(() => {
             <Span >{user?.name}</Span>
             </div>
             <Accordeon  onClick={changeArrow}>
-              {arrow?<KeyboardArrowDownOutlinedIcon/>:<KeyboardArrowUpOutlinedIcon/>}
+              {arrow?
+              <img src={arrowdown}/>:<img src={arrowup}/>
+              }
             </Accordeon>
               {arrow?
               <HeaderProfile>
                 <Close onClick={changeArrow}>
-                <CloseOutlinedIcon/>
+                <img src={closeIcon}/>
                 </Close>
                 <ProfileWraper>
                   <ProfileLink to={`/profile/${user?._id}`}>
-                  <AccountBoxOutlinedIcon style={{color:"#bbb3b3"}}/>
+                  <img src={userIcon2}/>
                   <Info>პირადი ინფორმაცია</Info>
                   </ProfileLink>
                 </ProfileWraper>
                 <ProfileWraper>
                   <ProfileLink to={'/parameters/changepassword'}>
-                  <ManageAccountsOutlinedIcon style={{color:"#bbb3b3"}}/>
+                    <img src={settings}/>
                   <Info>პარამეტრები</Info>
                   </ProfileLink>
                 </ProfileWraper>
                 <ProfileWraper onClick={logOut}>
                   <ProfileLink to={''}>
-                  <LogoutOutlinedIcon style={{color:"#bbb3b3"}}/>                  
+                    <img src={logoutIcon}/>
                   <Info>სისტემიდან გასვლა</Info>
                   </ProfileLink>
                   </ProfileWraper>

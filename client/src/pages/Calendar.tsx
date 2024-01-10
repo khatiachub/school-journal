@@ -1,10 +1,5 @@
 import { useEffect, useState} from 'react'
 import styled from 'styled-components'
-import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
-import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
-import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import { useNavigate } from 'react-router-dom';
 import { userRequest } from '../components/requestmethods';
 import { MyCalendar } from '../components/Moment';
@@ -12,7 +7,10 @@ import moment from 'moment';
 import { RRule} from 'rrule'
 import { useUser } from '../components/UserContext';
 import { Event as BigCalendarEvent } from 'react-big-calendar';
-
+import closeIcon from '../images/x (1).svg'
+import calendarIcon from '../images/calendar (1).svg'
+import subjectIcon from '../images/align-left.svg'
+import backArrow from '../images/arrow-left.svg'
 
 const Container=styled.div`
     width:95%;
@@ -21,7 +19,7 @@ const Container=styled.div`
 const SubjectModule=styled.div`
     max-width:500px;
     width:100%;
-    height:230px;
+    height:190px;
     position:absolute;
     left:50%;
     top:70%;
@@ -73,14 +71,6 @@ const Lesson=styled.p`
 const LessonWraper=styled.div`
     display:flex;
     align-items:center;
-`
-const GroupWraper=styled.div`
-    display:flex;
-    align-items:center;
-`
-const Group=styled.p`
-    margin-left:10px;
-    color:#262626;
 `
 const BackArrow=styled.div`
     width:100%;
@@ -293,7 +283,7 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
   return (
     <Container>
         <BackArrow onClick={handleClick}>
-            <ArrowBackIosOutlinedIcon/>
+            <img src={backArrow}/>
         </BackArrow>
         {user?.status==='მასწავლებელი'&&<Wraper>
         <Input  name='time' type='time' onChange={(e)=>handleChange(e)}/>
@@ -317,27 +307,21 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
       {selectedEventId?
         <SubjectModule >
           <RemoveButton onClick={handleRemove}>
-          <ClearOutlinedIcon/>
+          <img src={closeIcon}/>
           </RemoveButton>
           <Icons>
           <LessonWraper>
           <LessonIcon>
-              <SubjectOutlinedIcon/>
+              <img src={subjectIcon}/>
           </LessonIcon>
           <Lesson>გაკვეთილი:{selectedEventTitle}</Lesson>
           </LessonWraper>
           <LessonWraper>
           <LessonIcon>
-              <CalendarTodayOutlinedIcon/>
+              <img src={calendarIcon}/>
           </LessonIcon>
           <Lesson>{formatDate(selectedDate)}</Lesson>
           </LessonWraper>
-          <GroupWraper>
-          <LessonIcon>
-              <GroupOutlinedIcon/>
-          </LessonIcon>
-          <Group>მონაწილეები:</Group>
-          </GroupWraper>
           </Icons>
           {user?.status==='მასწავლებელი'&&<Button onClick={()=>handleDelete(selectedEventId)}>წაშლა</Button>}
       </SubjectModule>

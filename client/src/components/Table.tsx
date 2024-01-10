@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import { userRequest } from './requestmethods';
 import { useUser } from './UserContext';
+import trash from '../images/trash (1).svg'
+import editIcon from '../images/edit.svg'
 
 
 const LinkStudent=styled(Link)`
@@ -300,10 +300,10 @@ export default function Table (props:Props|any){
             <>
             <Td   key={student._id}>
                 <DeleteIcon  onClick={()=>deleteStudent(student._id)}>
-                <DeleteOutlineOutlinedIcon/>
-                </DeleteIcon>
+                <img src={trash}/>
+                 </DeleteIcon>
                 <EditIcon  onClick={()=>handleEdit(student._id)}>
-                <ModeEditOutlineOutlinedIcon/>
+                <img src={editIcon}/>
                 </EditIcon>
             </Td>
             </>
@@ -354,7 +354,7 @@ export default function Table (props:Props|any){
            {filteredSubject&&filteredSubject.map((subject:Subject)=>(
               <Td   key={subject._id}>
               <GradeDeleteIcon   onClick={()=>deleteGrade(subject._id)}>
-               <DeleteOutlineOutlinedIcon/>
+               {/* <DeleteOutlineOutlinedIcon/> */}
                </GradeDeleteIcon>
               </Td>
             ))

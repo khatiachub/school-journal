@@ -3,9 +3,8 @@ import styled from 'styled-components'
 import { userRequest } from '../components/requestmethods'
 import { useUser } from '../components/UserContext'
 import { useNavigate } from 'react-router-dom'
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-
+import eye from '../images/eye (1).svg'
+import eyeoff from '../images/eye-off.svg'
 
 const Container=styled.div`
   width:100%;
@@ -123,9 +122,9 @@ export default function ChangePassword() {
         <Input name='password' onChange={(e)=>handleChange(e)}  type={`${current?'text':'password'}`}/>
         <Visibility onClick={()=>handleVisible('password')}>
           {current?
-          <RemoveRedEyeOutlinedIcon/>
-            :<VisibilityOffOutlinedIcon/>
-          }
+            <img src={eyeoff}/>
+            :<img src={eye}/>
+        }
         </Visibility>
         </InputWraper>
         <Label>შეიყვანეთ ახალი პაროლი</Label>
@@ -133,8 +132,8 @@ export default function ChangePassword() {
         <Input name='newPassword' onChange={(e)=>handleChange(e)} type={`${newPass?'text':'password'}`}/>
         <Visibility onClick={()=>handleVisible('new')}>
           {newPass?
-          <RemoveRedEyeOutlinedIcon/>
-            :<VisibilityOffOutlinedIcon/>
+          <img src={eyeoff}/>
+            :<img src={eye}/>
           }
         </Visibility>
         </InputWraper>
@@ -143,9 +142,9 @@ export default function ChangePassword() {
         <Input name='confirmNewpassword' onChange={(e)=>handleChange(e)} type={`${confirm?'text':'password'}`}/>
         <Visibility onClick={()=>handleVisible('confirm')}>
           {confirm?
-          <RemoveRedEyeOutlinedIcon/>
-            :<VisibilityOffOutlinedIcon/>
-          }
+          <img src={eyeoff}/>
+          :<img src={eye}/>
+        }
         </Visibility>
         </InputWraper>
         <Button onClick={handleClick}>შეცვლა</Button>

@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react'
 import { subjects } from '../components/data'
 import { Link} from 'react-router-dom'
 import styled from 'styled-components'
-import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { useUser } from '../components/UserContext';
 import { userRequest } from '../components/requestmethods';
-
+import arrowForw from '../images/arrow-right.svg'
 
 const SubjectBox=styled(Link)`
    max-width:350px;
@@ -229,7 +228,7 @@ export default function Subjects() {
     <SubjectWrap>
       <LinkSubject>{subject.subject}</LinkSubject>
         <Arrow>
-          <ArrowForwardIosOutlinedIcon />
+          <img src={arrowForw} />
         </Arrow>
     </SubjectWrap>
     <Teacher>

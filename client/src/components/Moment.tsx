@@ -2,9 +2,9 @@ import { Calendar, momentLocalizer,View} from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import styled from 'styled-components'
-import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
-import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import { useEffect, useState } from 'react'
+import arrowback from '../images/arrow-left.svg'
+import arrowforw from '../images/arrow-right.svg'
 
 
 const localizer = momentLocalizer(moment)
@@ -297,11 +297,11 @@ const CustomToolbar: React.FC<any> = (toolbarProps) => {
       <Span>{formattedCurrentDate}</Span>
       <ArrowWraper>
     <Arrow onClick={() => toolbarProps.onNavigate('PREV')}>
-      <ArrowBackIosOutlinedIcon />
+      <img src={arrowback}/>
     </Arrow>
     <Day onClick={() => toolbarProps.onNavigate('TODAY')}>დღეს</Day>
     <Arrow onClick={() => toolbarProps.onNavigate('NEXT')}>
-      <ArrowForwardIosOutlinedIcon />
+    <img src={arrowforw}/>
     </Arrow>
     </ArrowWraper>
     </ArrowBox>

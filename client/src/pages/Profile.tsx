@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useUser } from '../components/UserContext'
-import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
-import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
+import mailIcon from '../images/mail.svg'
+import privateIcon from '../images/alert-octagon.svg'
 import { userRequest } from '../components/requestmethods';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-
+import closeIcon from '../images/x (2).svg'
 
 const Container=styled.div`
   width:89.5%;
@@ -136,7 +135,7 @@ const NumberValue=styled.h3`
 }
 `
 const Number=styled.p`
- color:#c0bcbc;
+ color:#525151;
 `
 
 const DeleteWindow=styled.div`
@@ -341,7 +340,7 @@ console.log(userProfile);
               <Buttons>
               <Text style={{color:'#525151'}}>ნამდვილად გსურთ ანგარიშის წაშლა?</Text>
               <Close style={{color:'#525151'}} onClick={()=>setDeleteUser(false)}>
-              <CloseOutlinedIcon/>
+              <img src={closeIcon}/>
               </Close>
               </Buttons>
             <Buttons>
@@ -356,7 +355,7 @@ console.log(userProfile);
         </ProfilePictureBox>
         <Private>
           <Icon>
-            <GppMaybeOutlinedIcon/>
+            <img src={privateIcon}/>
           </Icon>
           <PrivateNumber>
             <Number>პირადი ნომერი</Number>
@@ -365,7 +364,7 @@ console.log(userProfile);
         </Private>
         <Private>
           <Icon>
-            <MailOutlineOutlinedIcon/>
+            <img src={mailIcon}/>
           </Icon>
           <PrivateNumber>
             <Number>ელ-ფოსტა</Number>
