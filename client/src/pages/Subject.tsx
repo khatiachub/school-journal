@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components';
 import { useUser } from '../components/UserContext';
 import Accordeon from '../components/Accordeon';
-import arrowBack from '../images/arrow-left.svg'
+import arrowBack from '../images/chevrons-left.svg'
 
 
 

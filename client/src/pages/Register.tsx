@@ -279,7 +279,7 @@ export default function Register() {
         <Button  type='submit'>შესვლა</Button>
       </Form>
       </FormWraper>
-      <Image/>
+      <Image />
       {success?
       <SuccessBox>
         <Text>თქვენ წარმატებით გაიარეთ რეგისტრაცია, ვერიფიკაციის ლინკი გამოგზავნილია თქვენს იმეილზე</Text>

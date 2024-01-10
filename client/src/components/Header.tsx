@@ -22,7 +22,7 @@ interface Props {
 
 const HeaderWraper=styled.div`
    width:90%;
-   height:60px;
+   height:70px;
    border-radius:7px;
    background-color:#f7f6f6;  
    display:flex;
@@ -44,12 +44,14 @@ const HeaderWraper=styled.div`
 
 const FlexBox=styled.div`
   display:flex;
-  align-items:center;
+  align-items:start;
   width:210px;
   justify-content:space-between;
   margin-left:10px;
 `
 const Burger=styled.div`
+  display:none;
+@media screen and (max-width:768px) {
    width:40px;
    height:40px;
    border-radius:8px;
@@ -57,12 +59,12 @@ const Burger=styled.div`
    display:flex;
    justify-content:center;
    align-items:center;
-  
+}
 `
 const Image=styled.img`
-  width:70px;
-  height:70px;
-  object-fit:cover;
+  width:80px;
+  height:80px;
+  object-fit:contain;
   @media screen and (max-width:768px){
     display:none;
   }
@@ -171,7 +173,7 @@ const NavSchoolNumber=styled.p`
 `
 const NavWraper=styled.div`
   width:90%;
-  height:30px;
+  height:50px;
   border-radius:4px;
   border:1px solid #a09b9b;
   padding:10px;
@@ -187,6 +189,7 @@ const NavSchool=styled.p`
   text-align:center;
   margin-top:10px;
   color:#fff;
+  margin-left:20px;
 `
 const Wraper=styled(Link)`
   text-decoration:none;
@@ -354,12 +357,12 @@ useEffect(() => {
       </Navbar>
       <HeaderWraper >
         <FlexBox>
-          <Burger onClick={handleClick}>
+          <Burger  onClick={handleClick}>
             <img src={menu}/>
           </Burger>
-          <Link style={{display:'flex',textDecoration:'none',width:160,justifyContent:'space-around',marginTop:25}} to={'/'}>
+          <Link style={{display:'flex',textDecoration:'none',width:170,justifyContent:'space-around',fontSize:14}} to={'/'}>
           <Image  src={emis}/>
-          <School >ონლაინ სკოლა</School>
+          <School style={{marginTop:20}}>ონლაინ სკოლა</School>
           </Link>
         </FlexBox>
         <UserBox>

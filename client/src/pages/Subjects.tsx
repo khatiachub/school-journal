@@ -4,7 +4,7 @@ import { Link} from 'react-router-dom'
 import styled from 'styled-components'
 import { useUser } from '../components/UserContext';
 import { userRequest } from '../components/requestmethods';
-import arrowForw from '../images/arrow-right.svg'
+import arrowForw from '../images/chevron-right.svg'
 
 const SubjectBox=styled(Link)`
    max-width:350px;

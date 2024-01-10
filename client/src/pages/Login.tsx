@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { publicRequest } from '../components/requestmethods';
 import { useUser } from '../components/UserContext';
+import art from '../images/art-board.svg'
 
-
-const Image = styled.div`
+const Image = styled.img`
   width: 60%;
-  min-height:100vh;
-  background:url("https://onlineschool.emis.ge/assets/svg_icons/art-board.svg#Layer_1");
-  background-size: cover;
+  height:100vh;
+  /* background:url("../images/art-board.svg"); */
+  object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: end;
@@ -133,7 +133,7 @@ export default function Login() {
       <TitleLink to={'/recoverpassword'}>პაროლის აღდგენა</TitleLink>
       <TitleLink to={'/register'}>არ გაქვს ანგარიში? დარეგისტრირდი</TitleLink>
       </FormWraper>
-      <Image/>
+      <Image src={art}/>
     </Container>
   )
 }
