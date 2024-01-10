@@ -1,8 +1,7 @@
 import  { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link,useNavigate } from 'react-router-dom';
@@ -15,7 +14,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { userRequest } from './requestmethods';
-
+import emis from '../images/emiss.svg'
 
 interface Props {
   state: boolean;
@@ -61,9 +60,9 @@ const Burger=styled.div`
   
 `
 const Image=styled.img`
-  width:40px;
-  height:40px;
-  object-fit:contain;
+  width:70px;
+  height:70px;
+  object-fit:cover;
   @media screen and (max-width:768px){
     display:none;
   }
@@ -179,9 +178,9 @@ const NavWraper=styled.div`
   margin-top:50px;
 `
 const NavImage=styled.img`
-  width:40px;
-  height:40px;
-  object-fit:contain;
+  width:60px;
+  height:60px;
+  object-fit:cover;
 `
 const NavSchool=styled.p`
   width:80px;
@@ -206,7 +205,7 @@ const Wraper=styled(Link)`
 const Text=styled.p`
   color:#fff;
   margin-top:10px;
-  font-size:14px;
+  font-size:12px;
   @media screen and (max-width:768px){
     margin-top:0px;
     margin-left:20px;
@@ -319,7 +318,7 @@ useEffect(() => {
        {state?
         <NavbarMenu>
         <Wraper to={'/'}>
-            <NavImage src={'https://onlineschool.emis.ge/assets/svg_icons/brand.svg'}/>
+            <NavImage src={emis}/>
             <NavSchool>ონლაინ სკოლა</NavSchool>
         </Wraper>
         <NavWraper>
@@ -332,7 +331,7 @@ useEffect(() => {
          <Text>მთავარი</Text>
        </Wraper>
         <Wraper to={'/register'}>
-          <Person2OutlinedIcon style={{color:'#fff'}}/>
+          <PersonOutlineOutlinedIcon style={{color:'#fff'}}/>
           <Text>რეგისტრაცია</Text>
         </Wraper>
         {!user?
@@ -358,8 +357,8 @@ useEffect(() => {
           <Burger onClick={handleClick}>
             <MenuOutlinedIcon/>
           </Burger>
-          <Link style={{display:'flex',textDecoration:'none',width:160,justifyContent:'space-around',}} to={'/'}>
-          <Image  src={'https://onlineschool.emis.ge/assets/svg_icons/brand.svg'}/>
+          <Link style={{display:'flex',textDecoration:'none',width:160,justifyContent:'space-around',marginTop:25}} to={'/'}>
+          <Image  src={emis}/>
           <School >ონლაინ სკოლა</School>
           </Link>
         </FlexBox>
