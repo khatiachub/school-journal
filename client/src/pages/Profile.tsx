@@ -272,8 +272,11 @@ console.log(userProfile);
         try{
         const response=await userRequest.put(`/${user?._id}`,formData,
         {
-           headers:{Accept: "application/json, text/plain, */*",
-           "Content-Type": "application/x-www-form-urlencoded"}
+           headers:
+           {
+            Accept: "application/json, text/plain, */*",
+           "Content-Type": "application/x-www-form-urlencoded"
+          }
         }
         )
         console.log(response.data);

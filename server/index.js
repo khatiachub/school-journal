@@ -14,6 +14,7 @@ const userRoute=require("./routes/user");
 
 
 
+
 const MONGODB_URI = process.env.MONGO_URL||"mongodb+srv://chubinidzekhatia6:chubinidzekhatia@cluster0.jpfmufi.mongodb.net/journal?retryWrites=true&w=majority" 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true })

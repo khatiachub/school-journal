@@ -24,6 +24,12 @@ const Input=styled.input`
   border:1px solid #3317ad;
   border-radius:36px;
   margin-top:10px;
+  @media screen and (max-width:1172px) {
+    width:275px;
+  }
+  @media screen and (max-width:1024px) {
+    width:240px;
+  }
   @media screen and (max-width:510px) {
     width:275px;
   }
@@ -37,6 +43,12 @@ const Button=styled.button`
   border-radius:36px;
   margin-top:20px;
   background-color:#5e94fa;
+  @media screen and (max-width:1172px) {
+    width:275px;
+  }
+  @media screen and (max-width:1024px) {
+    width:240px;
+  }
    @media screen and (max-width:510px) {
     width:275px;
   }
@@ -111,12 +123,8 @@ const InputWraper=styled.div`
 const SuccessBox=styled.div`
   max-width:500px;
   width:100%;
-  height:340px;
+  min-height:340px;
   background-color:#1CA3DE;
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
   border-radius:10px;
   display:flex;
   justify-content:Center;
@@ -124,17 +132,41 @@ const SuccessBox=styled.div`
   padding:10px;
   box-sizing:border-box;
 `
+const SuccessWrap=styled.div`
+  width:100%;
+  padding:10px;
+  box-sizing:border-box;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  display:flex;
+  justify-content:center;
+`
 const Text=styled.p`
   max-width:500px;
   width:100%;
   text-align:center;
   color:#fff;
   font-size:25px;
-  line-height:2;
+  line-height:2.5;
+  @media screen and (max-width:485px) {
+    line-height:2;
+  }
 `
 const ErrorMessages=styled.p`
   margin-top:10px;
   color:#e42525;
+  text-align:start;
+  @media screen and (max-width:1172px) {
+    width:270px;
+  }
+  @media screen and (max-width:1024px) {
+    width:240px;
+  }
+  @media screen and (max-width:511px) {
+    width:270px;
+  }
 `
 
 
@@ -170,7 +202,6 @@ export default function Register() {
   const Confirmpassword=register("confirmpassword",{required:true})
   const Status=register("status",{required:true})
   
-
   const handleClick=()=>{
     const formData = new FormData();
     formData.append('name', name);
@@ -182,16 +213,12 @@ export default function Register() {
     formData.append('status', status);
       const registerUser = async () => {
         try {
-          const res = await axios.post("https://school-journal-gray.vercel.app/signup",formData,{            
-            headers:{
-             "Content-Type": "multipart/form-data" 
-            }
-          });
+          const res = await axios.post("https://school-journal-gray.vercel.app/signup",{name,lastname,email,password,confirmpassword,privatenumber,status},
+          );
           console.log("Response from server:", res.data);
           setSuccess(true)          
         } catch (err) {
           console.log(err);
-          console.log(...formData);
         }
       };
       if(password!==confirmpassword){
@@ -287,11 +314,13 @@ export default function Register() {
       </Form>
       </FormWraper>
       <Image />
+      <SuccessWrap>
       {success&&
       <SuccessBox>
         <Text>თქვენ წარმატებით გაიარეთ რეგისტრაცია, ვერიფიკაციის ლინკი გამოგზავნილია თქვენს იმეილზე</Text>
       </SuccessBox>
       }
+      </SuccessWrap>
     </Container>
   )
 }

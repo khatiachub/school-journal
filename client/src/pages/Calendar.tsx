@@ -19,23 +19,30 @@ const Container=styled.div`
 const SubjectModule=styled.div`
     max-width:500px;
     width:100%;
-    height:190px;
-    position:absolute;
-    left:50%;
-    top:70%;
-    transform:translate(-50%,-50%);
+    min-height:190px;
     background-color:#fff;
     border-radius:5px;
     box-shadow: #a5a2a2 0px 4px 8px -2px, #f1eeee 0px 0px 0px 1px;
     border: 1px solid #f1eeee;
-    z-index:100 ;
     display:flex;
     align-items:baseline;
     justify-content:space-between;
-    padding-right:10px;
+    padding:10px;
+    box-sizing:border-box;
+`
+const SubjectWraper=styled.div`
+  width:100%;
+  padding:10px;
+  box-sizing:border-box;
+  position:absolute;
+  left:50%;
+  top:70%;
+  transform:translate(-50%,-50%);
+  z-index: 100;
+  display:flex;
+  justify-content:center;
 `
 const RemoveButton=styled.div`
-    position:absolute;
     width:30px;
     height:30px;
     border-radius:5px;
@@ -44,13 +51,10 @@ const RemoveButton=styled.div`
     display:flex;
     justify-content:center;
     align-items:center;
-    top:10px;
-    right:10px;
 `
 const Icons=styled.div`
     display:flex;
     flex-direction:column;
-    margin-top:30px;
     margin-left:10px;
 `
 const LessonIcon=styled.div`
@@ -305,10 +309,8 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
             <MyCalendar myEventsList={weeklyEvents} handleEventClick={handleEventClick} />
       </Calendar>
       {selectedEventId?
+      <SubjectWraper>
         <SubjectModule >
-          <RemoveButton onClick={handleRemove}>
-          <img src={closeIcon}/>
-          </RemoveButton>
           <Icons>
           <LessonWraper>
           <LessonIcon>
@@ -322,9 +324,13 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
           </LessonIcon>
           <Lesson>{formatDate(selectedDate)}</Lesson>
           </LessonWraper>
-          </Icons>
           {user?.status==='მასწავლებელი'&&<Button onClick={()=>handleDelete(selectedEventId)}>წაშლა</Button>}
+          </Icons>
+          <RemoveButton onClick={handleRemove}>
+          <img src={closeIcon}/>
+          </RemoveButton>          
       </SubjectModule>
+      </SubjectWraper>
       :''}
       </Container>
   )
