@@ -198,7 +198,6 @@ const Wraper=styled(Link)`
   justify-content:center;
   align-items:center;
   margin-top:40px;
-  width:200px;
   @media screen and (max-width:768px){
     flex-direction:row;
     align-items:center;
