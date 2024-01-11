@@ -59,7 +59,13 @@ router.post("/signup", async(req,res)=>{
           res.status(201).send({message:"Please verify email, link is sent to your account"})
         } catch (err) {
           console.error("Error sending verification email:", err);
-          res.status(500).json({ error: "Error sending verification email" });        }
+          // res.status(500).json({ error: "Error sending verification email" });       
+          res.status(500).json({
+            error: "Internal Server Error",
+            message: "An error occurred while sending verification email",
+            details: err.message || "No specific error message available",
+          }); 
+        }
   })
 
 
@@ -133,7 +139,6 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 //UPDATE
 router.put("/:id",upload.single('image'), verifyTokenAndAuthorization, async (req, res) => {
   try {
-    const{image}=req.body
     if (req.file) {
       // Save the file path to the user's profile photo field
       req.body.image = req.file.path;

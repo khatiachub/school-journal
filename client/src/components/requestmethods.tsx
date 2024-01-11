@@ -3,16 +3,17 @@ import axios from "axios";
 
 
 const token=localStorage.getItem('token')
-
 const TOKEN = token?.replace(/^"(.*)"$/, '$1');
 
 
-console.log(TOKEN);
 
 
-const BASE_URL = "https://school-journal-gray.vercel.app";
+const BASE_URL = "https://school-journal-gray.vercel.app/";
 export const publicRequest = axios.create({
-    baseURL: BASE_URL
+    baseURL: BASE_URL,
+    headers:{
+      Accept: "application/json, text/plain, */*"
+    }
   });
 
   export const userRequest = axios.create({

@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
-import { publicRequest } from '../components/requestmethods';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Image = styled.div`
@@ -24,6 +24,9 @@ const Input=styled.input`
   border:1px solid #3317ad;
   border-radius:36px;
   margin-top:10px;
+  @media screen and (max-width:510px) {
+    width:275px;
+  }
 `
 const Button=styled.button`
   width:240px;
@@ -34,6 +37,9 @@ const Button=styled.button`
   border-radius:36px;
   margin-top:20px;
   background-color:#5e94fa;
+   @media screen and (max-width:510px) {
+    width:275px;
+  }
 `
 const Radio=styled.input`
   margin-top:10px;
@@ -164,15 +170,8 @@ export default function Register() {
   const Confirmpassword=register("confirmpassword",{required:true})
   const Status=register("status",{required:true})
   
-  
-  
- 
-
 
   const handleClick=()=>{
-    if(password!==confirmpassword){
-      return
-    }else{
     const formData = new FormData();
     formData.append('name', name);
     formData.append('lastname', lastname);
@@ -183,15 +182,23 @@ export default function Register() {
     formData.append('status', status);
       const registerUser = async () => {
         try {
-          const res = await publicRequest.post("/signup",formData);
-          console.log(res.data);
-          setSuccess(true)
+          const res = await axios.post("https://school-journal-gray.vercel.app/signup",formData,{            
+            headers:{
+             "Content-Type": "multipart/form-data" 
+            }
+          });
+          console.log("Response from server:", res.data);
+          setSuccess(true)          
         } catch (err) {
           console.log(err);
+          console.log(...formData);
         }
       };
-      registerUser(); 
-    }      
+      if(password!==confirmpassword){
+        return
+      }else{
+        registerUser();    
+      }
   }
   const nav=useNavigate();
   useEffect(()=>{
@@ -253,7 +260,7 @@ export default function Register() {
           <div style={{width:"240px",marginTop:25}}>
           <Label>გაიმეორეთ პაროლი</Label>
           <Input {...Confirmpassword} 
-          style={{border:`${errors.confirmpassword||confirmpassword===''||(confirmpassword!==''||password!==confirmpassword)?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.confirmpassword||confirmpassword===''||(confirmpassword!==''&&password!==confirmpassword)?'red':'green'}`}}
+          style={{border:`${errors.confirmpassword||confirmpassword===''||(confirmpassword!==''&&password!==confirmpassword)?'1px solid red':'1px solid grey'}`,outlineColor:`${errors.confirmpassword||confirmpassword===''||(confirmpassword!==''&&password!==confirmpassword)?'red':'green'}`}}
           name='confirmpassword' type='password'/>
           {(errors.confirmpassword||confirmpassword==='')&&<ErrorMessages>ველის შევსება სავალდებულოა</ErrorMessages>}
           {(password!==confirmpassword&&confirmpassword!=='')&&<ErrorMessages>პაროლები არ ემთხვევა</ErrorMessages>}
@@ -280,11 +287,11 @@ export default function Register() {
       </Form>
       </FormWraper>
       <Image />
-      {success?
+      {success&&
       <SuccessBox>
         <Text>თქვენ წარმატებით გაიარეთ რეგისტრაცია, ვერიფიკაციის ლინკი გამოგზავნილია თქვენს იმეილზე</Text>
       </SuccessBox>
-      :''}
+      }
     </Container>
   )
 }
