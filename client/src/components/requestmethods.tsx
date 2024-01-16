@@ -8,7 +8,7 @@ const TOKEN = token?.replace(/^"(.*)"$/, '$1');
 
 
 
-const BASE_URL = "http://localhost:5002/";
+const BASE_URL = "https://school-journal-gray.vercel.app/";
 export const publicRequest = axios.create({
     baseURL: BASE_URL,
     headers:{
