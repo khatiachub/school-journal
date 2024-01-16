@@ -6,6 +6,10 @@ import privateIcon from '../images/alert-octagon.svg'
 import { userRequest } from '../components/requestmethods';
 import closeIcon from '../images/x (2).svg'
 import avatar from '../images/829453_user_512x512.png'
+import alert from '../images/alert-triangle (1).svg'
+
+
+
 
 const Container=styled.div`
   width:89.5%;
@@ -203,6 +207,16 @@ const ImageWraper=styled.div`
     align-items:center;
   }
 `
+const Error=styled.div`
+  margin-top:10px;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:50px;
+  @media screen and (max-width:500px){
+    bottom:60px;
+  }
+`
 const NameWraper=styled.div`
 @media screen and (max-width:500px){
     display:none;
@@ -238,7 +252,6 @@ export default function Profile() {
     }  
   }
     
-console.log(userProfile);
 
     useEffect(() => {
       async function getData() {
@@ -255,6 +268,7 @@ console.log(userProfile);
     }, [user]); 
     
     const[image,setImage]=useState("")
+    const[error,setError]=useState(false)
     const uploadImage=(e:React.ChangeEvent<HTMLInputElement>)=>{
       const files = e.target.files;
       if (files && files.length > 0) {
@@ -262,9 +276,18 @@ console.log(userProfile);
         reader.readAsDataURL(files[0]);
         reader.onload = () => {
           setImage(reader.result as string);
+          if (e.target.files && e.target.files[0]) {
+            if (e.target.files[0].size > 1 * 1000 * 1024) {
+              setError(true)
+            }else{
+              setError(false)
+            }
+          }
         };
       }
-    }
+
+    
+  }
      
     const handleUpload=()=>{
       const formData = new FormData();
@@ -313,9 +336,8 @@ console.log(userProfile);
         };
       }
         fetchData();
-    }
+    }    
     
-
     return (
       <ContainerWraper>
     <Container>
@@ -325,9 +347,12 @@ console.log(userProfile);
             <Name>{userProfile?.name} {userProfile?.lastname}</Name>
             <Status>{userProfile?.status}</Status>
           </NameWraperResponsive>
-          <ImageWraper >
+          <ImageWraper style={{position:'relative'}}>
           <input style={{display:'none'}} type='file' ref={ref} onChange={uploadImage} name='image'accept="image/*" />
-          <Image onClick={onImageClick} src={image?image:userProfile?.image?userProfile?.image:avatar}/>
+          <Image  onClick={onImageClick} src={image?image:userProfile?.image?userProfile?.image:avatar}/>
+          <Error >
+          {error&&<img src={alert}/>}
+          </Error> 
           <Button  onClick={handleUpload}>ატვირთვა</Button>
           </ImageWraper>
           <DeleteWraper >
