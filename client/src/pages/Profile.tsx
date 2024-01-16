@@ -5,6 +5,7 @@ import mailIcon from '../images/mail.svg'
 import privateIcon from '../images/alert-octagon.svg'
 import { userRequest } from '../components/requestmethods';
 import closeIcon from '../images/x (2).svg'
+import avatar from '../images/829453_user_512x512.png'
 
 const Container=styled.div`
   width:89.5%;
@@ -270,7 +271,7 @@ console.log(userProfile);
       formData.append('image', image);
       async function fetchData(){
         try{
-        const response=await userRequest.put(`/${user?._id}`,formData,
+        await userRequest.put(`/${user?._id}`,formData,
         {
            headers:
            {
@@ -279,7 +280,6 @@ console.log(userProfile);
           }
         }
         )
-        console.log(response.data);
         window.location.reload()
         } catch(error){
           console.error('Error fetching data:', error);
@@ -327,7 +327,7 @@ console.log(userProfile);
           </NameWraperResponsive>
           <ImageWraper >
           <input style={{display:'none'}} type='file' ref={ref} onChange={uploadImage} name='image'accept="image/*" />
-          <Image onClick={onImageClick} src={image?image:userProfile?.image?userProfile?.image:'https://onlineschool.emis.ge/assets/images/pattern.png'}/>
+          <Image onClick={onImageClick} src={image?image:userProfile?.image?userProfile?.image:avatar}/>
           <Button  onClick={handleUpload}>ატვირთვა</Button>
           </ImageWraper>
           <DeleteWraper >

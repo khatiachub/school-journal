@@ -15,6 +15,7 @@ import arrowup from '../images/arrow-up.svg'
 import settings from '../images/settings.svg'
 import closeIcon from '../images/x (1).svg'
 import userIcon2 from '../images/user (2).svg'
+import avatar from '../images/829453_user_512x512.png'
 
 interface Props {
   state: boolean;
@@ -370,7 +371,7 @@ useEffect(() => {
             <SchoolNumber>სსიპ - ქალაქ თბილისის №55 საჯარო სკოლა</SchoolNumber>
           </SchoolBox>
           <UserWraper>
-            <ProfileImage onClick={changeArrow}  src={userImage?userImage:'https://onlineschool.emis.ge/assets/images/pattern.png'}/>
+            <ProfileImage onClick={changeArrow}  src={userImage?userImage:avatar}/>
             <div style={{display:'flex',flexDirection:'column'}}>
             {user?.status==='მასწავლებელი'?
             <User style={{fontSize:12}}>მასწავლებელი</User>:

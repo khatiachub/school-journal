@@ -24,6 +24,9 @@ const Input=styled.input`
   border:1px solid #3317ad;
   border-radius:36px;
   margin-top:30px;
+  &::placeholder{
+    padding-left:10px;
+  }
 `
 const Button=styled.button`
   width:300px;
