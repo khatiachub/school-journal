@@ -53,7 +53,7 @@ const Td=styled.td`
     height:40px;
     color:#333333;
     @media screen and (max-width:900px) {
-    padding: 10px;
+    padding:10px;
     font-size:13px;
   }
     &:nth-child(even) {
@@ -62,40 +62,31 @@ const Td=styled.td`
   }
 `
 const DeleteIcon=styled.div`
-  /* position:absolute;
-  right:55px; */
   color:#1CA3DE;
   cursor: pointer;
   margin-right:60px;
   @media screen and (max-width:600px) {
     font-size:13px;
-    /* right:40px; */
   }
   @media screen and (max-width:485px) {
     font-size:10px;
     box-sizing:border-box;
-    /* right:45px; */
   }
-  @media screen and (max-width:400px) {
-    /* margin-right:0; */
-  }
+  
 `
 const EditIcon=styled.div`
   position:absolute;
   right:20px;
   color:#1CA3DE;
   cursor: pointer;
-  /* margin-right:25px; */
   @media screen and (max-width:600px) {
     font-size:10px;
-    /* margin-right:10px; */
   }
   @media screen and (max-width:485px) {
     padding: 5px;
     font-size:10px;
     box-sizing:border-box;
     right:12px;
-    /* margin-right:0px; */
   }
 `
 const Tdborder=styled.td`
@@ -104,20 +95,36 @@ const Tdborder=styled.td`
 
 
 const Input=styled.input`
-  max-width:300px;
   width:100%;
   height:50px;
   border:none;
   outline:none;
+  position: relative;
+  padding-left:3px; 
 `
 const Button=styled.button`
    position:absolute;
-   right:5px;
+   right:22px;
    width:60px;
    height:30px;
    top:25px;
    border:none;
    font-size:14px;
+   color:#fff;
+   border-radius:5px;
+   background-color:#1CA3DE;
+   @media screen and (max-width:900px) {
+    font-size:10px;
+    top:15px;
+    width:45px;
+  }
+  @media screen and (max-width:405px) {
+    right:15px;
+  }
+  @media screen and (max-width:370px) {
+    width:30px;
+    font-size:8px;
+  }
 `
 const GradeDeleteIcon=styled.div`
     color:#1CA3DE;
@@ -207,8 +214,7 @@ export default function Table (props:Props|any){
     const deleteGrade=(subjectId:string)=>{
       async function fetchData(){
         try{
-        const response=await userRequest.delete(`/student/${params.id}/grade/${subjectId}`)
-        console.log(response.data);
+        await userRequest.delete(`/student/${params.id}/grade/${subjectId}`)
         window.location.reload()
         } catch(error){
           console.error('Error fetching data:', error);
@@ -245,7 +251,7 @@ export default function Table (props:Props|any){
             <Th>საგანი</Th>
             <Th>დასწრება</Th>
             <Th>შეფასება</Th>
-            <Th >რედაქტირება</Th>
+            <Th style={{textAlign:'center'}}>წაშლა</Th>
             </>
             }
         </Tr>
@@ -285,9 +291,12 @@ export default function Table (props:Props|any){
             
            <Td  key={student._id}>
                 {edit&&student._id===id?
-                 <div style={{display:'flex', alignItems:'center'}}>
-                  <LinkStudent key={student.privatenumber} to={''} className='list'><Input  placeholder='change name' onChange={(e)=>handleChange(e)} name='name' /></LinkStudent>
-                  <Button onClick={()=>editName(student._id)}>Change</Button>
+                 <div style={{display:'flex', alignItems:'center',backgroundColor:'#fff',width:'100%'}}>
+                  <LinkStudent key={student.privatenumber} to={''} className='list'>
+                    <Input placeholder='სახელი' onChange={(e)=>handleChange(e)} name='name' />
+                    <Button onClick={()=>editName(student._id)}>Change</Button>
+
+                    </LinkStudent>
                  </div>
                   :
                   <LinkStudent key={student.privatenumber} to={`/student/${student._id}`} className='list'>{student.name}</LinkStudent>
@@ -354,7 +363,7 @@ export default function Table (props:Props|any){
            {filteredSubject&&filteredSubject.map((subject:Subject)=>(
               <Td   key={subject._id}>
               <GradeDeleteIcon   onClick={()=>deleteGrade(subject._id)}>
-               {/* <DeleteOutlineOutlinedIcon/> */}
+               <img  src={trash}/>
                </GradeDeleteIcon>
               </Td>
             ))

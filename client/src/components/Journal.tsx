@@ -144,7 +144,6 @@ const {user}=useUser()
             try{
             const response=await userRequest.get(`/student/grade`)
             setStudents(response.data);
-            console.log(students);
             
             
             } catch(error){
@@ -154,7 +153,6 @@ const {user}=useUser()
             fetchData();
       },[user])
 
-      console.log(students);
       
   const[state,setState]=useState<StateJournal>(
     {

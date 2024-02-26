@@ -314,8 +314,7 @@ export default function Profile() {
     const handleDelete=()=>{
       async function fetchData(){
         try{
-        const response=await userRequest.delete(`/${user?._id}/image`)
-        console.log(response.data);
+        await userRequest.delete(`/${user?._id}/image`)
         window.location.reload()
         } catch(error){
           console.error('Error fetching data:', error);
@@ -328,8 +327,7 @@ export default function Profile() {
     const deleteProfile=()=>{
       async function fetchData(){
         try{
-        const response=await userRequest.delete(`/${user?._id}`)
-        console.log(response.data);
+        await userRequest.delete(`/${user?._id}`)
         window.location.reload()
         } catch(error){
           console.error('Error fetching data:', error);

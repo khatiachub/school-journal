@@ -81,8 +81,7 @@ export default function ChangePassword() {
     const handleClick=()=>{
         async function fetchData(){
             try{
-            const response=await userRequest.put(`/changepassword/${user?._id}`,userpassword)
-            console.log(response.data);
+            await userRequest.put(`/changepassword/${user?._id}`,userpassword)
             setSuccess(true)
             // window.location.reload()
             } catch(error){

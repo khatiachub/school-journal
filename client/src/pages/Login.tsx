@@ -98,7 +98,6 @@ export default function Login() {
   const loginUser = async (users:LoginFormValues) => {
     try {
       const res = await publicRequest.post("/signin",users);
-      console.log(res.data);
       login(res.data)
       nav("/")
       window.location.reload()

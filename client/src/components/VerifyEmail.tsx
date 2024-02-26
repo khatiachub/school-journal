@@ -3,7 +3,6 @@ import  { useEffect, useState } from 'react'
 import {  useNavigate, useParams } from 'react-router-dom'
 import { userRequest } from './requestmethods'
 import styled from 'styled-components'
-import { useUser } from './UserContext'
 import failicon from '../images/failure.svg'
 
 const SuccessVerify=styled.div`
@@ -30,7 +29,6 @@ const Img=styled.img`
 
 
 export default function VerifyEmail() {
-    const{user}=useUser()
     const params=useParams()
     const[success,setSuccess]=useState(false)
     const nav=useNavigate()
@@ -45,7 +43,6 @@ export default function VerifyEmail() {
         }
       
        },[success])
-    console.log(user);
     
     
     useEffect(()=>{
@@ -55,8 +52,7 @@ export default function VerifyEmail() {
                 await userRequest.get(url)
                 setSuccess(true)
             }catch(error){
-                 console.log(error);
-                 
+                 console.log(error); 
             }
         }
         VerifyEmailUrl()

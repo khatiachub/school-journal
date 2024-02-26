@@ -49,7 +49,7 @@ export default function RecoverPassword() {
             try {
                 await axios({
                 method: 'put',
-                url: `http://localhost:5002/${id}`,
+                url: `https://school-journal-gray.vercel.app/${id}`,
                 data: value,
                 headers: { token: `Bearer ${TOKEN}`}
               });

@@ -213,9 +213,8 @@ export default function Register() {
     formData.append('status', status);
       const registerUser = async () => {
         try {
-          const res = await axios.post("https://school-journal-gray.vercel.app/signup",{name,lastname,email,password,confirmpassword,privatenumber,status},
+          await axios.post("https://school-journal-gray.vercel.app/signup",{name,lastname,email,password,confirmpassword,privatenumber,status},
           );
-          console.log("Response from server:", res.data);
           setSuccess(true)          
         } catch (err) {
           console.log(err);

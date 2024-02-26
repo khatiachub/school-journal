@@ -40,9 +40,8 @@ export default function UpdatePassword() {
     const handleClick=()=>{
         async function fetchData(){
             try{
-            const response=await publicRequest.post('/sendemail',{email:email})
-            console.log(response.data);
-            // window.location.reload()
+            await publicRequest.post('/sendemail',{email:email})
+            window.location.reload()
             } catch(error){
               console.error('Error fetching data:', error);
             };

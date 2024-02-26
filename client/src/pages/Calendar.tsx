@@ -187,8 +187,7 @@ export default function Calendars() {
     const handleAdd=()=>{
         async function fetchData(){
             try{
-            const response=await userRequest.post('/calendar',subjects)
-            console.log(response.data);
+            await userRequest.post('/calendar',subjects)
             window.location.reload()
             } catch(error){
               console.error('Error fetching data:', error);
@@ -273,8 +272,7 @@ const events = myEventsList.map(({ start, end, title,_id }) => ({
       const handleDelete=(id:string)=>{
         async function fetchData(){
           try{
-          const response=await userRequest.delete(`/calendar/${id}`)
-          console.log(response.data);
+          await userRequest.delete(`/calendar/${id}`)
           window.location.reload()
           } catch(error){
             console.error('Error fetching data:', error);

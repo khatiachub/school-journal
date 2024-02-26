@@ -35,7 +35,6 @@ const Select=styled.select`
   height:40px;
   width:100px;
   border:none;
-  /* background-color:#ddd; */
   color:#262626;
   margin-top:15px;
   padding:5px;
@@ -202,7 +201,6 @@ interface State{
 
 export default function Studentroom() {
     const[students,setStudents]=useState<Students>({} as Students)
-    console.log(students);
     
     const params = useParams<{ id:string}>();
     const{id}=params
@@ -220,7 +218,6 @@ export default function Studentroom() {
             fetchData();
             
       },[])  
-      console.log(students);
       
   const[state,setState]=useState<State>({
       grade:null,
